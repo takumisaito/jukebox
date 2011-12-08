@@ -61,10 +61,10 @@ Jukebox.Manager.prototype = {
 			// Codec Detection MIME List
 			var mimeList = [
 				// e = extension, m = mime type
-				{ e: '3gp', m: [ 'audio/3gpp' ] },
+				{ e: '3gp', m: [ 'audio/3gpp', 'audio/amr' ] },
 				// { e: 'avi', m: 'video/x-msvideo' }, // avi container allows pretty everything, impossible to detect -.-
 				{ e: 'aac', m: [ 'audio/aac', 'audio/aacp' ] },
-				{ e: 'amr', m: [ 'audio/amr' ] },
+				{ e: 'amr', m: [ 'audio/amr', 'audio/3gpp' ] },
 				{ e: 'm4a', m: [ 'audio/mp4', 'audio/mp4; codecs="mp4a.40.2,avc1.42E01E"', 'audio/mpeg4', 'audio/mpeg4-generic', 'audio/mp4a-latm', 'audio/MP4A-LATM', 'audio/x-m4a' ] },
 				{ e: 'mp3', m: [ 'audio/mp3', 'audio/mpeg', 'audio/mpeg; codecs="mp3"', 'audio/MPA', 'audio/mpa-robust' ] }, // mpeg was name for mp2 and mp3! avi container was mp4/m4a
 				{ e: 'mpga', m: [ 'audio/MPA', 'audio/mpa-robust', 'audio/mpeg', 'video/mpeg' ] },
