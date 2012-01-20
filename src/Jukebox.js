@@ -472,7 +472,7 @@ Jukebox.prototype = {
 		 * @returns {Number} pointer position (currentTime)
 		 */
 		getCurrentTime: function() {
-			return this.context.currentTime || 0;
+			return this.context.currentTime || 0;
 		},
 
 		/*

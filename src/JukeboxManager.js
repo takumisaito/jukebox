@@ -42,7 +42,7 @@ Jukebox.Manager = function(enforceFlash) {
 		var that = this;
 		Jukebox.__intervalId = window.setInterval(function() {
 			that.__loop();
-		}, 100);
+		}, 20);
 	}
 
 };
