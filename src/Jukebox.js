@@ -79,7 +79,7 @@ Jukebox.prototype = {
 		loop: false, // loops the complete stream again
 		flashMediaElement: './swf/FlashMediaElement.swf',
 		enforceFlash: false, // will disable all HTML5 stuff
-		canplaythroughTimeout: 1000, // timeout if EventListener fails
+		canplaythroughTimeout: 1000 // timeout if EventListener fails
 	},
 
 	/*

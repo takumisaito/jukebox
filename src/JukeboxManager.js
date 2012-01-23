@@ -118,7 +118,9 @@ Jukebox.Manager.prototype = {
 
 
 			// FIXME: HACK, but there's no way to detect these crappy implementations
-			if (navigator.userAgent.match(/MSIE 9\.0/) || navigator.userAgent.match(/iPhone|iPod|iPad/i)) {
+			if (
+				// navigator.userAgent.match(/MSIE 9\.0/) ||
+				navigator.userAgent.match(/iPhone|iPod|iPad/i)) {
 				this.features.channels = 1;
 			}
 
@@ -249,9 +251,8 @@ Jukebox.Manager.prototype = {
 
 				jukebox.wasReady = jukebox.setCurrentTime(jukebox.isPlaying.start);
 
-
 			// Reset / Stop
-			} else if (jukebox.isPlaying && jukebox.wasReady){
+			} else if (jukebox.isPlaying && jukebox.wasReady === true){
 
 				if (jukeboxPosition > jukebox.isPlaying.end) {
 
