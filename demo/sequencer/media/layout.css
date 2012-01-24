@@ -1,24 +1,25 @@
 
 
-#wrapper {
+#sequencer {
 	display: block;
 	width: 60%;
 	min-width: 500px;
 	height: auto;
 	margin: 0 auto;
 	padding: 0;
-	border: 1px solid #460a0c;
 	border-radius: 15px;
 	color: #fff;
 	background: #222;
 }
 
-#controls {
+#sequencer-menu {
 	margin: 0 0 0 0;
 	border: 0 none;
 	color: #fff;
-	border-bottom: 1px solid #460a0c;
+	border-bottom: 1px solid #fff;
 	border-radius: 15px 15px 0 0;
+	text-align: center;
+	background: #ccc;
 }
 
 #timeline {
@@ -52,7 +53,7 @@
 }
 
 #timeline td.active {
-	background: #dd2027;
+	background: #922;
 }
 
 #timeline input {
@@ -66,12 +67,3 @@
 	text-align: center;
 }
 
-#about {
-	display: block;
-	padding: 15px;
-	font-size: 0.8em;
-}
-
-#about a {
-	color: #dd2027;
-}

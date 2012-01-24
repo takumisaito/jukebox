@@ -15,9 +15,9 @@
 
 <header>Dubstep Sequencer</header>
 
-<div id="wrapper">
+<div id="sequencer">
 
-	<div id="controls" class="z-menu">
+	<div id="sequencer-menu">
 		<button onclick="mySequencer.play()">Play</button>
 		<button onclick="mySequencer.stop()">Stop</button>
 		|
@@ -28,9 +28,12 @@
 
 	<table id="timeline"></table>
 
-	<div id="about">
+</div>
+
+<div class="wrapper center">
+	<div>
 		Each sequence field can has a value of 1-5.<br>
-		This demo uses sound samples from <a href="http://www.musicradar.com/news/tech/free-music-samples-download-loops-hits-and-multis-217833/79">this site</a>.
+		This demo uses sound samples from <a href="http://www.musicradar.com/news/tech/free-music-samples-download-loops-hits-and-multis-217833/79">this post on musicradar.com</a>.
 	</div>
 </div>
 
@@ -80,6 +83,7 @@ var mySequencer,
 		trackSettings[t] = setting;
 
 	}
+
 
 
 	/*
