@@ -12,35 +12,36 @@
 </head>
 <body>
 	
-	<header>Jukebox
-	<ul id="menu">
-		<li>Shooter</li>
-		<li class="active">Inspector</li>
-	</ul>	
-	</header>
+<header>Jukebox</header>
 
-	<h2>Under iOS, there's a security model that only allows playback of audio
-	if it was caused by a user event. For example, you can use a &lt;button&gt;
-	with an onclick callback function to playback audio.</h2>
+<h2>iOS Security Model Usage</h2>
 
+<p class="first">
+	On iOS, the security model prevents automatic playback of Audio.
+	<br><br>
+	There's only one method to bypass the security model, using an interval.<br>
+	Therefore you will have to initialize the Jukebox inside the UI event callstack.
+	<br><br>
+	The result: You are able to playback a background music that continues
+	right after playing another sprite entry like in-game sound effects.
+</p>
 
-<h4>iOS relevant example with repeating background music</h4>
-<div class="panel">
-	<button onclick="initAutoplayingJukebox()">initialize Jukebox</button>
+<div class="wrapper center">
+	<div>
+		<button onclick="initJukebox()">Initialize autoplaying Jukebox</button>
+		<button onclick="playEffect()">Play Sound Effect</button>
+	</div>
 </div>
 
 <script>
-
-/*
- * PUBLIC helpers
- */
-var initAutoplayingJukebox;
+var initJukebox,
+	playEffect;
 
 (function() {
 
 	var myJukebox;
 
-	initAutoplayingJukebox = function() {
+	initJukebox = function() {
 
 		// Avoid multiple Jukeboxes on multi-channel environments
 		if (myJukebox !== undefined) {
@@ -82,6 +83,10 @@ var initAutoplayingJukebox;
 
 	};
  
+
+	playEffect = function() {
+		myJukebox.play('cajon-2');
+	};
 
 })();
 </script>

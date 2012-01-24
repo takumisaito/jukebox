@@ -70,7 +70,7 @@ header {
 
 h2 {
 	font-weight: normal;
-	color: #aaa;
+	color: #888;
 	margin: 0 auto;
 	width: 80%;
 	max-width: 900px;
@@ -78,66 +78,95 @@ h2 {
 	border-bottom: 1px solid #ccc;
 }
 
-#volume {
+p {
+	margin: 0px auto;
+	width: 80%;
+	max-width: 900px;
+	padding: 0;
+	color: #444;
+}
+
+.wrapper {
 	margin-top: 20px;
-	padding-top: 20px;
 	border-top: 1px solid #ccc;
-	padding-bottom: 20px;
 	border-bottom: 1px solid #ccc;
 	text-align: center;
 	background: #ccc;
 }
 
-#volume label {
-	color: #333;
-	display: inline-block;
-	margin-right: 10px;
-}
-
-#spritemap {
-	margin: 20px auto;
+.wrapper > div {
+	margin: 0px auto;
+	padding: 10px 0;
+	width: 80%;
 	max-width: 900px;
-	position: relative;
-	height: 100px;
-	border: 2px solid #fff;
-	background: #fff;
-}
-
-#spritemap div {
-	position: absolute;
-	top: 0px;
-	bottom: 0px;
-	line-height: 100px;
-	-webkit-transition: all 0.2s ease-out;
 	color: #fff;
-	cursor: pointer;
-	text-shadow: 0px -1px 0px rgba(0,0,0,0.5);
 }
 
-#spritemap div:hover {
-	-webkit-transform: scale3d(1.1, 1.1, 1.1);
+.wrapper > h4 {
+	margin: 0;
+	padding: 5px 0 0 0;
+	color: #fff;
 }
 
-#spritemap div.green {
-	background-color:#20b53e;
-	background-image: -moz-linear-gradient(90deg, #20b53e, #5ded39 50.0%);
-	background-image: -webkit-linear-gradient(90deg, #20b53e, #5ded39 50.0%);
-	background-image: -o-linear-gradient(90deg, #20b53e, #5ded39 50.0%);
-	background-image: -ms-linear-gradient(90deg, #20b53e, #5ded39 50.0%);
-	background-image: linear-gradient(90deg, #20b53e, #5ded39 50.0%)
+button {
+	color: #222;
+	padding: 5px 10px;
+	border: 1px solid #999;
+	border-radius: 10px 10px 10px 10px;
 }
 
-#spritemap div.red {
-	background-color:#b5291f;
-	background-image: -moz-linear-gradient(90deg, #b5291f, #f73e3e 50.0%);
-	background-image: -webkit-linear-gradient(90deg, #b5291f, #f73e3e 50.0%);
-	background-image: -o-linear-gradient(90deg, #b5291f, #f73e3e 50.0%);
-	background-image: -ms-linear-gradient(90deg, #b5291f, #f73e3e 50.0%);
-	background-image: linear-gradient(90deg, #b5291f, #f73e3e 50.0%)	
+button:hover {
+	color: #fff;
+	border: 1px solid #ccc;
+	background: rgb(51,51,51); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(51,51,51,1) 0%, rgba(64,64,64,1) 50%, rgba(32,32,32,1) 51%, rgba(68,68,68,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(51,51,51,1)), color-stop(50%,rgba(64,64,64,1)), color-stop(51%,rgba(32,32,32,1)), color-stop(100%,rgba(68,68,68,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(51,51,51,1) 0%,rgba(64,64,64,1) 50%,rgba(32,32,32,1) 51%,rgba(68,68,68,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(51,51,51,1) 0%,rgba(64,64,64,1) 50%,rgba(32,32,32,1) 51%,rgba(68,68,68,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(51,51,51,1) 0%,rgba(64,64,64,1) 50%,rgba(32,32,32,1) 51%,rgba(68,68,68,1) 100%); /* IE10+ */
+	background: linear-gradient(top,  rgba(51,51,51,1) 0%,rgba(64,64,64,1) 50%,rgba(32,32,32,1) 51%,rgba(68,68,68,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#444444',GradientType=0 ); /* IE6-9 */
+}
+
+.slider {
+	width: 200px;
+	height: 20px;
+	background: #eee;
+	border: 1px solid #999;
+	border-radius: 10px 10px 10px 10px;
+	-webkit-appearance: none;
+}
+
+.slider, button {
+	background: rgb(255,255,255); /* Old browsers */
+	background-image: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%); /* FF3.6+ */
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(50%,rgba(241,241,241,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1))); /* Chrome,Safari4+ */
+	background-image: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* Chrome10+,Safari5.1+ */
+	background-image: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* Opera 11.10+ */
+	background-image: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* IE10+ */
+	background-image: linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 ); /* IE6-9 */
+}
+
+.slider::-webkit-slider-thumb {
+	width: 10px;
+	height: 40px;
+	border: 1px solid #666;
+	border-radius: 10px 10px 10px 10px;
+
+	background: #a90329; /* Old browsers */
+	background-image: -moz-linear-gradient(top,  #a90329 0%, #8f0222 44%, #6d0019 100%); /* FF3.6+ */
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a90329), color-stop(44%,#8f0222), color-stop(100%,#6d0019)); /* Chrome,Safari4+ */
+	background-image: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 44%,#6d0019 100%); /* Chrome10+,Safari5.1+ */
+	background-image: -o-linear-gradient(top,  #a90329 0%,#8f0222 44%,#6d0019 100%); /* Opera 11.10+ */
+	background-image: -ms-linear-gradient(top,  #a90329 0%,#8f0222 44%,#6d0019 100%); /* IE10+ */
+	background-image: linear-gradient(top,  #a90329 0%,#8f0222 44%,#6d0019 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=0 ); /* IE6-9 */
+	-webkit-appearance: none;
 }
 
 h3, h4 {
-	color: #333;
+	color: #555;
 	margin: 0;
 	padding: 0;
 	text-align: center;
@@ -154,7 +183,11 @@ mark {
 	background: #999;
 }
 
-.panel {
+.first {
+	padding: 1em 0 0 0;
+}
+
+.center {
 	text-align: center;
 }
 
@@ -163,7 +196,7 @@ mark {
 }
 
 
-.z-timeline {
+.timeline {
 	position: relative;
 	max-width: 530px;
 	height: 30px;
@@ -177,7 +210,7 @@ mark {
 	margin: 0 auto;
 }
 
-.z-timeline-marker {
+.timeline-marker {
 	display: block;
 	position: absolute;
 	top: 0px;

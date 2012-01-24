@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>Multi Jukebox Demo</title>
+	<title>Multi Playback Demo</title>
     <meta charset="utf-8" />
 
 	<script src="../src/Jukebox.js"></script>
@@ -12,28 +12,26 @@
 </head>
 <body>
 
-	<header>Jukebox
-	<ul id="menu">
-		<li>Shooter</li>
-		<li class="active">Inspector</li>
-	</ul>	
-	</header>
+	<header>Jukebox</header>
 
-	<h2>Warning: This is work in progress. These demos are not finished yet, although they might give you an idea of how to use the Jukebox. Stay tuned for updates.</h2>
+	<h2>Multi Playback Demo</h2>
+	<p class="first">
+		This demo shows parallel (timed) playback using two different Jukebox instances.<br>
+		The visualized bar is the spritemap position.
+	</p>
 
-
-<div class="panel">
+<div class="center">
 	<button id="start" onclick="playDemo()">Start Playback</button>
 </div>
 
 <h4>Timeline</h4>
-<div id="timeline" class="z-timeline"><div id="timeline-marker" class="z-timeline-marker"></div></div>
+<div id="timeline" class="timeline"><div id="timeline-marker" class="timeline-marker"></div></div>
 
 <h4>Cajons</h4>
-<div id="cajons" class="z-timeline"><div id="cajons-marker" class="z-timeline-marker"></div></div>
+<div id="cajons" class="timeline"><div id="cajons-marker" class="timeline-marker"></div></div>
 
 <h4>Arpeggios</h4>
-<div id="arpeggios" class="z-timeline"><div id="arpeggios-marker" class="z-timeline-marker"></div></div>
+<div id="arpeggios" class="timeline"><div id="arpeggios-marker" class="timeline-marker"></div></div>
 
 
 

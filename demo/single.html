@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>Sprite Inspector</title>
+	<title>Single Playback Demo</title>
     <meta charset="utf-8" />
 
 	<script src="../src/Jukebox.js"></script>
@@ -12,28 +12,34 @@
 </head>
 <body>
 
-<header>Jukebox
-<ul id="menu">
-	<li class="shooter"></li>
-	<li class="inspector active"></li>
-</ul>	
-</header>
+<header>Jukebox</header>
 
-<h2>Warning: This is work in progress. These demos are not finished yet, although they might give you an idea of how to use the Jukebox. Stay tuned for updates.</h2>
+<h2>Single Playback Demo</h2>
+<p class="first">
+	Tap the buttons to playback the different sprite entries.<br>
+	You can see a difference between the optional forced playback and defaulted automatic-cloning mode
+	in environments that support parallel playback.
+</p>
 
-<div id="spritemap" class="panel"></div>
+<h4>Default Playback</h4>
+<p class="center" id="demo-default"></p>
 
-<div id="volume">
-	<label>Global volume</label>
-	<input type="range" name="volume-slider" min="0" max="100" value="50" id="volume-slider">
+<h4>Forced playback</h4>
+<p class="center" id="demo-forced"></p>
+
+<div id="volume" class="wrapper">
+	<h4>Volume</h4>
+	<div>
+		<input id="volume-slider" class="slider" type="range" name="volume-slider" min="0" max="100" value="50">
+	</div>
 </div>
 
 <h4>Additional controls</h4>
-<div class="panel">
+<p class="center">
 	<button onclick="myJukebox.stop()">stop()</button>
 	<button onclick="myJukebox.pause()">pause()</button>
 	<button onclick="myJukebox.resume()">resume()</button>
-</div>
+</p>
 
 <script>
 var myJukebox;
@@ -65,37 +71,30 @@ var myJukebox;
 	
 	});
 
-	var randColors = ['green', 'red'],
-		randIndex = 0;
 
-	function createButton(entry, content) {
-		
-		var button = document.createElement('div');
-		button.innerHTML = '<label>'+entry+'</label>';
-		button.style.width = Math.round(((content.end - content.start) / 9.30)*100) + "%";
-		button.style.left = Math.round((content.start / 9.30)*100) + "%";
-		button.className = randColors[randIndex];
+	function createButton(entry, force) {
 
+		var button = document.createElement('button');
+
+		button.innerHTML = entry;
 		button.onclick = function() {
-			myJukebox.play(entry);
+			myJukebox.play(entry, force === true ? true : false);
 		};
-		
-		// pick a new color
-		randIndex = randIndex == randColors.length-1 ? 0 : ++randIndex;
-		
+
 		return button;
-	
-	}
+
+	};
 
 
-	var spritemapEntries = document.getElementById('spritemap');
+	var demoDefault = document.getElementById('demo-default'),
+		demoForced = document.getElementById('demo-forced');
 
 	for (var entry in myJukebox.settings.spritemap) {
-	
-		spritemapEntries.appendChild(createButton(entry, myJukebox.settings.spritemap[entry]));
-
+		demoDefault.appendChild(createButton(entry, false));
+		demoForced.appendChild(createButton(entry, true));
 	}
-	
+
+
 	// connect volume slider
 	document.getElementById('volume-slider').addEventListener('change', function() {
 		myJukebox.setVolume(this.value/100);
