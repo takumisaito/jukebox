@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Documentation</title>
+		<meta charset="utf-8" />
+
+		<link rel="stylesheet" href="./media/layout.css">
+
+	</head>
+<body>
+
+<header>
+	Jukebox
+	<div>
+		<a href="index.html" class="active">Documentation</a>
+		<a href="api.html">API</a>
+	</div>
+</header>
+
+<aside id="navigation">
+	<nav>
+		<a href="#what">What is Jukebox?</a>
+		<a href="#why">Why using Jukebox?</a>
+		<a href="#important">Important Hints</a>
+		<a href="#support-html5">HTML5 Support</a>
+		<a href="#support-flash">Flash Support</a>
+		<a href="#getting-started">Getting Started</a>
+	</nav>
+</aside>
+
+<h1>Documentation</h1>
+
+<article id="what">
+	<h2>What is Jukebox?</h2>
+
+	<p>
+		Jukebox is a component to handle the playback of music and sound
+		effects across multiple web browsers and operating systems.
+	</p>
+
+	<p>
+		Jukebox is designed for ultra-low performance environments, such
+		as mobiles - and is even able to deliver Android 1.6+ via Flash
+		fallback.
+	</p>
+
+	<p>
+		This documentation will explain how to use Jukebox and it will
+		describe many of the issues we found while developing a proper
+		playback environment for mobile devices.
+	</p>
+</article>
+
+<article id="why">
+	<h2>Why using Jukebox?</h2>
+
+	<p>
+	</p>
+
+</article>
+
+<article id="important">
+
+	<h2>Important Issues and Hints</h2>
+	
+	<p>
+		<b>Chrome 16.0.912.* (Mac OSX)</b> is a known for timing issues
+		with the Audio Decoder. getCurrentTime() will return false
+		values that are incorrect, because the internal used
+		decoder is not behaving the same way as it should.
+		<br>
+		Confirmed is that this could be a problem related to VBR
+		encoded files.
+	</p>
+
+	<h3>iOS</h3>
+	<p>
+		iOS allows only playback of a single sound in parallel.
+		It has also latencies up to 820ms (initial playback) due to the
+		implementation of using iTunes as a low-priority thread.
+	</p>
+	<p>
+		The <b>iOS security model</b> only allows playback of sound using the
+		Audio API (and iTunes in the background) if the callstack was
+		triggered by an event inside the UI layer. That means, you will have
+		to use an element.onclick(), element.ontouchstart() or similar to
+		initialize the Jukebox.
+		<br><br>
+		Take a look at the <a href="../demo/ios.html">iOS demo</a> that shows
+		how to bypass the security model for having a background music.
+	</p>
+
+
+	<h3>Android</h3>
+	<p>
+		Jukebox should work with all third-party shipped web browsers that
+		are known to support HTML5, as they ship their own codec implementations.
+	</p>
+	<p>
+		Native WebKit will also support HTML5 Audio, but it depends on if the
+		manufacturer ships a codec implementation. Google's policies for the
+		Android platform requires a Apache/BSD license based implementation of
+		the codec. That's why Android 2.3.2+ devices <q>may have</q> an mp3
+		codec installed. Third-party Mods like Cyanogen also support mp3 and
+		flac codec implementations.
+	</p>
+
+	<h3>Mobile Codec Mess (Fallback solution)</h3>
+	<p>
+		All mobiles support GSM, so they have the voice codec for GSM installed
+		which is based on 3gp / amr. This codec supports bitrates up to 12.2kbit/s.
+		While this is a pretty sub-par quality, it is a good fallback solution for
+		slow internet connections.
+		<br><br>
+		The codec is known to work across all Android devices (even on those without
+		any other supported codec) and known to work on iOS and WebOS.
+	</p>
+
+</article>
+
+<article id="support-html5">
+
+	<h2>Supported Environments (HTML5 Audio)</h2>
+	<small>sorted by Browser's Engine</small>
+
+	<h3>Gecko</h3>
+	<ul>
+		<li>Firefox 4+ Mobile for Android</li>
+		<li>Firefox 4+ Desktop (Windows, Mac OSX, Linux)</li>
+	</ul>
+
+	<h3>Presto</h3>
+	<ul>
+		<li>Opera Mobile 11+ for Android</li>
+		<li>Opera 11+ (Windows, Mac OSX, Linux)</li>
+	</ul>
+
+	<h3>Trident</h3>
+	<ul>
+		<li>Internet Explorer 9+ (Windows)</li>
+	</ul>
+
+	<h3>WebKit Mobile</h3>
+	<ul>
+		<li>Native Android Browser 2.3.2+ (Nexus S, HTC Desire HD, Samsung Galaxy S, Samsung Galaxy S2)</li>
+		<li>iOS 4.3+ (iPad, iPad2, iPod 3G, iPod 3GS, iPhone 4)</li>
+		<li>Palm WebOS 2.0+ (Palm Pre, Palm Pre 2)</li>
+	</ul>
+
+	<h3>WebKit Desktop</h3>
+	<ul>
+		<li>Safari 4+ (Windows, Mac OSX)</li>
+		<li>Safari 5.0.4+ (Windows, Mac OSX)</li>
+		<li>Google Chrome 4+ (Windows, Mac OSX)</li>
+		<li>Google Chrome Dev Channel (10,11,12,13,14) (Linux, Windows, Mac OSX)</li>
+		<li>Chromium Nightly 12.0+ (Windows, Mac OSX, Linux)</li>
+		<li>WebKit nightly rev83010(+) (Windows, Mac OSX, Linux)</li>
+	</ul>
+
+</article>
+
+<article id="support-flash">
+
+	<h2>Supported Environments (Flash Fallback)</h2>
+	<small>sorted by Browser's Engine</small>
+
+	<h3>Trident</h3>
+	<ul>
+		<li>Internet Explorer 6, 7, 8 (Windows)</li>
+	</ul>
+
+	<h3>WebKit Mobile</h3>
+	<ul>
+		<li>Native Android Browser 1.6+ (all devices of all manufacturers)</li>
+	</ul>
+
+</article>
+
+<article id="getting-started">
+
+	<h2>Getting Started</h2>
+
+	<p>
+
+
+	</p>
+
+</article>
+
+<script>
+(function() {
+
+
+
+})();
+</script>
+</body>
+</html>
