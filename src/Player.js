@@ -3,22 +3,28 @@
  * http://github.com/zynga/jukebox
  *
  * Copyright 2011, Zynga Inc.
+ * Developed by Christoph Martens (@martensms)
+ *
  * Licensed under the MIT License.
  * https://raw.github.com/zynga/jukebox/master/MIT-LICENSE.txt
  *
  */
 
+this.jukebox = {};
 
 /*
- * This will construct a Jukebox instance.
- * The Jukebox Manager itself is transparent and irrelevant for usage.
- * @param {Object} settings The settings object (look defaults for more details)
- * @param {Number} [id] The optional id of the Jukebox (automatically managed if not given)
+ * This will construct a jukebox.Player instance.
+ * The jukebox.Manager itself is transparent and irrelevant for usage.
+ *
+ * @param {Object} settings The settings object (see defaults for more details)
+ * @param {jukebox.id} [origin] The optional origin's id of the jukebox.Player,
+ * used by jukebox.Manager for dynamic clone balancing
  */
-var Jukebox = function(settings, origin) {
+jukebox.Player = function(settings, origin) {
 
-	this.id = ++Jukebox.__jukeboxId;
+	this.id = ++jukebox.__jukeboxId;
 	this.origin = origin || null;
+
 
 	this.settings = {};
 
@@ -26,38 +32,37 @@ var Jukebox = function(settings, origin) {
 		this.settings[d] = this.defaults[d];
 	}
 
-	for (var s in settings) {
-		this.settings[s] = settings[s];
+	if (Object.prototype.toString.call(settings) === '[object Object]') {
+		for (var s in settings) {
+			this.settings[s] = settings[s];
+		}
 	}
 
 
-	// The Jukebox Manager itself is transparent
-	if (
-		Jukebox.__manager === undefined
-		&& typeof Jukebox.Manager === 'function'
-	) {
-		Jukebox.__manager = new Jukebox.Manager(this.settings.enforceFlash);
+	// Pseudo-Singleton to prevent double-initializaion
+	if (Object.prototype.toString.call(jukebox.Manager) === '[object Function]') {
+		jukebox.Manager = new jukebox.Manager();
 	}
+
 
 	this.isPlaying = null;
 	this.resource = null;
 
-	// Use Jukebox Manager for Codec and Feature Detection
-	if (Jukebox.__manager) {
-		this.resource = Jukebox.__manager.getPlayableResource(this.settings.resources);
 
-	// No Jukebox Manager? So it's a forced Playback
-	} else if (this.settings.resources.length === 1) {
-		this.resource = this.settings.resources[0];
+	// Get playable resources via Feature / Codec Detection
+	if (Object.prototype.toString.call(jukebox.Manager) === '[object Object]') {
+		this.resource = jukebox.Manager.getPlayableResource(this.settings.resources);
+	} else {
+		this.resource = this.settings.resources[0] || null;
 	}
 
-	// Still no resource? Stupidz!
+
 	if (this.resource === null) {
-		// GrandMa should update her Browser -.-
-		throw "Either your Browser can't play the given resources - or you have missed to include Jukebox Manager.";
+		throw "Your browser can't playback the given resources - or you have missed to include jukebox.Manager";
 	} else {
 		this.__init();
 	}
+
 
 	return this;
 
@@ -68,9 +73,9 @@ var Jukebox = function(settings, origin) {
 /*
  * The unique Jukebox ID
  */
-Jukebox.__jukeboxId = 0;
+jukebox.__jukeboxId = 0;
 
-Jukebox.prototype = {
+jukebox.Player.prototype = {
 
 	defaults: {
 		resources: [], // contains the audio file urls
@@ -78,8 +83,7 @@ Jukebox.prototype = {
 		spritemap: {}, // spritemap entries
 		loop: false, // loops the complete stream again
 		flashMediaElement: './swf/FlashMediaElement.swf',
-		enforceFlash: false, // will disable all HTML5 stuff
-		canplaythroughTimeout: 1000 // timeout if EventListener fails
+		timeout: 1000 // timeout if EventListener on "canplaythrough" fails
 	},
 
 	/*
@@ -88,7 +92,7 @@ Jukebox.prototype = {
 	__addToManager: function(event) {
 
 		if (this.__wasAddedToManager !== true) {
-			Jukebox.__manager.addJukebox(this);
+			jukebox.Manager.add(this);
 			this.__wasAddedToManager = true;
 		}
 
@@ -126,17 +130,20 @@ Jukebox.prototype = {
 	},
 	*/
 
-	// TODO: Optimize the use case for origin
+
 	__init: function() {
 
 		var that = this,
 			settings = this.settings,
-			features = Jukebox.__manager.features || {},
+			features = {},
 			api;
 
+		if (jukebox.Manager && jukebox.Manager.features !== undefined) {
+			features = jukebox.Manager.features;
+		}
 
 		// HTML5 Audio
-		if (features.html5audio) {
+		if (features.html5audio === true) {
 
 			this.context = new Audio();
 			this.context.src = this.resource;
@@ -159,7 +166,7 @@ Jukebox.prototype = {
 				window.setTimeout(function(){
 					that.context.removeEventListener('canplaythrough', addFunc, true);
 					addFunc('timeout');
-				}, settings.canplaythroughTimeout);
+				}, settings.timeout);
 
 			}
 
@@ -179,13 +186,14 @@ Jukebox.prototype = {
 
 				if (settings.autoplay === true) {
 					this.context.autoplay = true;
-				} else if (settings.spritemap[settings.autoplay]) {
+				} else if (settings.spritemap[settings.autoplay] !== undefined) {
 					this.play(settings.autoplay);
 				}
 
-			} else if (features.channels === 1 && settings.spritemap[settings.autoplay]) {
+			} else if (features.channels === 1 && settings.spritemap[settings.autoplay] !== undefined) {
 
 				this.__backgroundMusic = settings.spritemap[settings.autoplay];
+				this.__backgroundMusic.started = Date.now ? Date.now() : +new Date();
 
 				// Initial playback will do the trick for iOS' security model
 				this.play(settings.autoplay);
@@ -194,7 +202,7 @@ Jukebox.prototype = {
 
 
 		// Flash Audio
-		} else if (features.flashaudio) {
+		} else if (features.flashaudio === true) {
 
 			// FIXME: This is the hacky API, but got no more generic idea for now =/
 			for (api in this.FLASHAPI) {
@@ -323,13 +331,18 @@ Jukebox.prototype = {
 			return;
 		}
 
+		var now = Date.now ? Date.now() : +new Date();
+
 		if (this.__backgroundMusic.started === undefined) {
-			this.__backgroundMusic.started = Date.now ? Date.now() : +new Date();
+
+			this.__backgroundMusic.started = now;
 			this.setCurrentTime(this.__backgroundMusic.start);
+
 		} else {
-			var now = Date.now ? Date.now() : +new Date();
+
 			this.__backgroundMusic.__lastPointer = (( now - this.__backgroundMusic.started) / 1000) % (this.__backgroundMusic.end - this.__backgroundMusic.start) + this.__backgroundMusic.start;
 			this.play(this.__backgroundMusic.__lastPointer);
+
 		}
 
 	},
@@ -352,8 +365,8 @@ Jukebox.prototype = {
 
 		if (this.isPlaying !== null && enforce !== true) {
 
-			if (Jukebox.__manager) {
-				Jukebox.__manager.addQueueEntry(pointer, this.id);
+			if (jukebox.Manager !== undefined) {
+				jukebox.Manager.addToQueue(pointer, this.id);
 			}
 
 			return;
@@ -388,7 +401,7 @@ Jukebox.prototype = {
 
 			this.isPlaying = this.settings.spritemap[pointer];
 
-			// Start Playback, Stream will be corrected within the soundloop of the Jukebox.Manager
+			// Start Playback, stream position will be corrected by jukebox.Manager
 			if (this.context.play) {
 				this.context.play();
 			}
@@ -559,7 +572,6 @@ Jukebox.prototype = {
 			return false;
 
 		}
-
 
 	}
 

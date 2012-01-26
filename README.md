@@ -35,8 +35,8 @@ The Jukebox Manager offers Codec and Feature detection - to determine which kind
 If you want to still use Jukebox without Jukebox Manager, you will have to set *resources* to an Array containing only one resource.
 
 
-Options
--------
+Settings
+--------
 
 These are the supported Jukebox settings you can pass through its constructor:
 
@@ -46,15 +46,13 @@ These are the supported Jukebox settings you can pass through its constructor:
 
 These are optional settings for the Flash Fallback:
 
-* flashMediaElement = 'url/to/FlashMediaElement.swf' (default is ./swf/FlashMediaElement.swf)
-* enforceFlash = 'boolean' will enforce flash usage of instead using html5 as default audio api.
+* flashMediaElement = 'url/to/FlashMediaElement.swf' (default is './swf/FlashMediaElement.swf')
 
 An example spritemap.entry looks like this: ("entry" is the name of the spritemap entry which is used for autoplay or stream playback)
 
 * spritemap.entry.start = *time*
 * spritemap.entry.end = *time*
 * spritemap.entry.loop = *Boolean*
-
 
 
 
@@ -78,6 +76,16 @@ var mySettings = {
 };
 ```
 
+
+
+Settings for jukebox.Manager
+----------------------------
+
+The jukebox.Manager is transparently running in the background. But it also allows you to modify the feature detection to enforce flash usage,
+which might be the case on some systems.
+
+* useFlash = *Boolean* 'true' will enforce flash usage. Defaulted with 'false'.
+* useGameLoop: *Boolean* 'true' will disable the jukebox.Manager interval. You can then call jukebox.Manager.loop() inside your game loop, which may be required for low-end devices due to performance-critic intervals.
 
 
 Setting Up a Sound Sprite
@@ -115,7 +123,7 @@ For example, you can have an *autoplay* setup for a background music, but you ca
 **Creating a Jukebox**
 
 ```js
-var myJukebox = new Jukebox({
+var player = new jukebox.Player({
 
 	"resources": [
 		"./url/to/spritemap.mp3",
@@ -145,23 +153,23 @@ var myJukebox = new Jukebox({
 
 // Example call of the Jukebox API
 // Note that this is a looping background
-myJukebox.play('background-birds');
+player.play('background-birds');
 
 window.setTimeout(function() {
-	myJukebox.play('cricket-chirp');
+	player.play('cricket-chirp');
 	// will delegate the work to the internal next free clone,
 	// because the origin Jukebox is busy
 }, 1000);
 
 window.setTimeout(function() {
-	myJukebox.play('cricket-chirp', true);
+	player.play('cricket-chirp', true);
 	// will enforce playback and result will be instant playback
 	// and no background music is played afterwards
 }, 5000);
 ```
 
 
-Public (per-Jukebox) API
+Public (jukebox.Player) API
 -----------------------
 
 Example of a Jukebox API Call:
@@ -169,8 +177,8 @@ Example of a Jukebox API Call:
 ```js
 // Note that myJukebox was initialized already like in the previous example (see > Usage)
 
-myJukebox.play("background-music"); // fastest
-myJukebox.play(20.10); // slower, will search for matching spritemap entry
+player.play("background-music"); // fastest
+player.play(20.10); // slower, will search for matching spritemap entry
 ```
 
 

@@ -4,8 +4,8 @@
 	<title>Single Playback Demo</title>
     <meta charset="utf-8" />
 
-	<script src="../src/Jukebox.js"></script>
-	<script src="../src/JukeboxManager.js"></script>
+	<script src="../src/Player.js"></script>
+	<script src="../src/Manager.js"></script>
 
 	<link rel="stylesheet" href="./media/layout.css">
 
@@ -36,16 +36,16 @@
 
 <h4>Additional controls</h4>
 <p class="center">
-	<button onclick="myJukebox.stop()">stop()</button>
-	<button onclick="myJukebox.pause()">pause()</button>
-	<button onclick="myJukebox.resume()">resume()</button>
+	<button onclick="myPlayer.stop()">stop()</button>
+	<button onclick="myPlayer.pause()">pause()</button>
+	<button onclick="myPlayer.resume()">resume()</button>
 </p>
 
 <script>
-var myJukebox;
+var myPlayer;
 (function() {
 
-	myJukebox = new Jukebox({
+	myPlayer = new jukebox.Player({
 	
 		resources: [
 			'media/spritemap-cajon.ac3',
@@ -78,7 +78,7 @@ var myJukebox;
 
 		button.innerHTML = entry;
 		button.onclick = function() {
-			myJukebox.play(entry, force === true ? true : false);
+			myPlayer.play(entry, force === true ? true : false);
 		};
 
 		return button;
@@ -89,7 +89,7 @@ var myJukebox;
 	var demoDefault = document.getElementById('demo-default'),
 		demoForced = document.getElementById('demo-forced');
 
-	for (var entry in myJukebox.settings.spritemap) {
+	for (var entry in myPlayer.settings.spritemap) {
 		demoDefault.appendChild(createButton(entry, false));
 		demoForced.appendChild(createButton(entry, true));
 	}
@@ -97,7 +97,7 @@ var myJukebox;
 
 	// connect volume slider
 	document.getElementById('volume-slider').addEventListener('change', function() {
-		myJukebox.setVolume(this.value/100);
+		myPlayer.setVolume(this.value/100);
 	}, false);
 
 })();

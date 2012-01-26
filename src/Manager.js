@@ -3,51 +3,79 @@
  * http://github.com/zynga/jukebox
  *
  * Copyright 2011, Zynga Inc.
+ * Developed by Christoph Martens (@martensms)
+ *
  * Licensed under the MIT License.
  * https://raw.github.com/zynga/jukebox/master/MIT-LICENSE.txt
  *
  */
 
-
-if (typeof Jukebox === 'undefined') {
-	throw "Jukebox Manager requires Jukebox.js to run properly";
+if (this.jukebox === undefined) {
+	throw "jukebox.Manager requires jukebox.Player (Player.js) to run properly."
 }
 
+
 /*
- * This is the transparent Jukebox Manager that runs in the background
+ * This is the transparent jukebox.Manager that runs in the background
  *
- * You shouldn't call the constructor, a Jukebox Manager instance is automatically
- * created if you create a Jukebox.
+ * You shouldn't call the constructor, a jukebox.Manager instance is automatically
+ * created if you create a jukebox.Player instance.
  *
+ * If you need to call the constructor before instanciating the jukebox.Player,
+ * you should take a look for the Game Loop integration demo (demo/game.html)
+ *
+ *
+ * @param {Object} settings The settings object (see defaults for more details)
  */
-Jukebox.Manager = function(enforceFlash) {
+jukebox.Manager = function(settings) {
 
 	this.features = {};
 	this.codecs = {};
 
 	// Correction, Reset & Pause
-	this.__jukeboxes = {};
-	this.__jukeboxesLength = 0;
+	this.__players = {};
+	this.__playersLength = 0;
 
 	// Queuing functionality
 	this.__clones = {};
 	this.__queue = [];
 
-	this.__enforceFlash = enforceFlash || false;
+
+	this.settings = {};
+
+	for (var d in this.defaults) {
+		this.settings[d] = this.defaults[d];
+	}
+
+	if (Object.prototype.toString.call(settings) === '[object Object]') {
+		for (var s in settings) {
+			this.settings[s] = settings[s];
+		}
+	}
+
+
 	this.__detectFeatures();
 
 
-	// Only allow one Jukebox Manager Loop, to prevent errors in playback
-	if (!Jukebox.__intervalId) {
-		var that = this;
-		Jukebox.__intervalId = window.setInterval(function() {
-			that.__loop();
+	// If you don't want to use an own game loop
+	if (this.settings.useGameLoop === false) {
+
+		jukebox.Manager.__initialized = window.setInterval(function() {
+			jukebox.Manager.loop();
 		}, 20);
+
+	} else {
+		Jukebox.Manager.__initialized = true;
 	}
 
 };
 
-Jukebox.Manager.prototype = {
+jukebox.Manager.prototype = {
+
+	defaults: {
+		useFlash: false, // enforce Flash Fallback
+		useGameLoop: false // use own game loop (interval)
+	},
 
 	__detectFeatures: function() {
 
@@ -56,7 +84,7 @@ Jukebox.Manager.prototype = {
 		 */
 		var audio = window.Audio && new Audio();
 
-		if (audio && audio.canPlayType && !this.__enforceFlash) {
+		if (audio && audio.canPlayType && this.settings.useFlash === false) {
 
 			// Codec Detection MIME List
 			var mimeList = [
@@ -147,11 +175,11 @@ Jukebox.Manager.prototype = {
 		}
 
 		// Allow enforce of Flash Usage
-		if (this.__enforceFlash) {
+		if (this.settings.useFlash === true) {
 			this.features.flashaudio = true;
 		}
 
-		if (this.features.flashaudio) {
+		if (this.features.flashaudio === true) {
 
 			// Overwrite Codecs only if there's no HTML5 Audio support
 			if (!this.features.html5audio) {
@@ -178,118 +206,11 @@ Jukebox.Manager.prototype = {
 
 	},
 
-	__loop: function() {
 
-		// Nothing to do
-		if (this.__jukeboxLength === 0) {
-			return;
-		}
+	__getPlayerById: function(id) {
 
-
-		// Queue Functionality for Clone-supporting environments
-		if (
-			this.__queue.length
-			&& this.__jukeboxesLength < this.features.channels
-		) {
-
-			var queueEntry = this.__queue[0],
-				originJukebox = this.__getJukeboxById(queueEntry.origin);
-
-			if (originJukebox !== null) {
-
-				var freeClone = this.__getClone(queueEntry.origin, originJukebox.settings);
-
-				// Use free clone for playback
-				if (freeClone !== null) {
-
-					if (this.features.volume === true) {
-						var originJukebox = this.__jukeboxes[queueEntry.origin];
-						originJukebox && freeClone.setVolume(originJukebox.getVolume());
-					}
-
-					this.addJukebox(freeClone);
-					freeClone.play(queueEntry.pointer, true);
-
-				}
-
-			}
-
-			// Remove Queue Entry. It's corrupt if nothing happened.
-			this.__queue.splice(0, 1);
-
-			return;
-
-
-		// Queue Functionality for Single-Jukebox-Mode (iOS)
-		} else if (
-			this.__queue.length
-			&& this.features.channels === 1
-		) {
-
-			var queueEntry = this.__queue[0],
-				originJukebox = this.__getJukeboxById(queueEntry.origin);
-
-			if (originJukebox !== null) {
-				originJukebox.play(queueEntry.pointer, true);
-			}
-
-			// Remove Queue Entry. It's corrupt if nothing happened
-			this.__queue.splice(0, 1);
-
-		}
-
-
-
-		for (var id in this.__jukeboxes) {
-
-			var jukebox = this.__jukeboxes[id],
-				jukeboxPosition = jukebox.getCurrentTime() || 0;
-
-
-			// Correction
-			if (jukebox.isPlaying && jukebox.wasReady === false) {
-
-				jukebox.wasReady = jukebox.setCurrentTime(jukebox.isPlaying.start);
-
-			// Reset / Stop
-			} else if (jukebox.isPlaying && jukebox.wasReady === true){
-
-				if (jukeboxPosition > jukebox.isPlaying.end) {
-
-					if (jukebox.isPlaying.loop === true) {
-						jukebox.play(jukebox.isPlaying.start, true);
-					} else {
-						jukebox.stop();
-					}
-
-				}
-
-
-			// Remove Idling Clones
-			} else if (jukebox.isClone && jukebox.isPlaying === null) {
-
-				this.removeJukebox(jukebox);
-				continue;
-
-
-			// Background Music for Single-Channel Environment
-			} else if (jukebox.__backgroundMusic !== undefined && jukebox.isPlaying === null) {
-
-				if (jukeboxPosition > jukebox.__backgroundMusic.end) {
-					jukebox.__backgroundHackForiOS();
-				}
-
-			}
-
-		}
-
-
-	},
-
-	__getJukeboxById: function(id) {
-
-		if (this.__jukeboxes && this.__jukeboxes[id] !== undefined) {
-			return this.__jukeboxes[id];
+		if (this.__players && this.__players[id] !== undefined) {
+			return this.__players[id];
 		}
 
 		return null;
@@ -323,7 +244,7 @@ Jukebox.Manager.prototype = {
 			// Clones just don't autoplay. Just don't :)
 			cloneSettings.autoplay = false;
 
-			var newClone = new Jukebox(cloneSettings, origin);
+			var newClone = new jukebox.Player(cloneSettings, origin);
 			newClone.isClone = true;
 			newClone.wasReady = false;
 
@@ -342,6 +263,123 @@ Jukebox.Manager.prototype = {
 	/*
 	 * PUBLIC API
 	 */
+
+	/*
+	 * This is the jukebox.Manager's stream-correction loop.
+	 *
+	 * You are "allowed" to call it yourself, if you created the jukebox.Manager
+	 * instance with useGameLoop = true in the constructor's settings.
+	 */
+	loop: function() {
+
+		// Nothing to do
+		if (
+			this.__playersLength === 0
+			// || jukebox.Manager.__initialized !== true
+		) {
+			return;
+		}
+
+
+		// Queue Functionality for Clone-supporting environments
+		if (
+			this.__queue.length
+			&& this.__playersLength < this.features.channels
+		) {
+
+			var queueEntry = this.__queue[0],
+				originPlayer = this.__getPlayerById(queueEntry.origin);
+
+			if (originPlayer !== null) {
+
+				var freeClone = this.__getClone(queueEntry.origin, originPlayer.settings);
+
+				// Use free clone for playback
+				if (freeClone !== null) {
+
+					if (this.features.volume === true) {
+						var originPlayer = this.__players[queueEntry.origin];
+						originPlayer && freeClone.setVolume(originPlayer.getVolume());
+					}
+
+					this.add(freeClone);
+					freeClone.play(queueEntry.pointer, true);
+
+				}
+
+			}
+
+			// Remove Queue Entry. It's corrupt if nothing happened.
+			this.__queue.splice(0, 1);
+
+			return;
+
+
+		// Queue Functionality for Single-Mode (iOS)
+		} else if (
+			this.__queue.length
+			&& this.features.channels === 1
+		) {
+
+			var queueEntry = this.__queue[0],
+				originPlayer = this.__getPlayerById(queueEntry.origin);
+
+			if (originPlayer !== null) {
+				originPlayer.play(queueEntry.pointer, true);
+			}
+
+			// Remove Queue Entry. It's corrupt if nothing happened
+			this.__queue.splice(0, 1);
+
+		}
+
+
+
+		for (var id in this.__players) {
+
+			var player = this.__players[id],
+				playerPosition = player.getCurrentTime() || 0;
+
+
+			// Correction
+			if (player.isPlaying && player.wasReady === false) {
+
+				player.wasReady = player.setCurrentTime(player.isPlaying.start);
+
+			// Reset / Stop
+			} else if (player.isPlaying && player.wasReady === true){
+
+				if (playerPosition > player.isPlaying.end) {
+
+					if (player.isPlaying.loop === true) {
+						player.play(player.isPlaying.start, true);
+					} else {
+						player.stop();
+					}
+
+				}
+
+
+			// Remove Idling Clones
+			} else if (player.isClone && player.isPlaying === null) {
+
+				this.remove(player);
+				continue;
+
+
+			// Background Music for Single-Mode (iOS)
+			} else if (player.__backgroundMusic !== undefined && player.isPlaying === null) {
+
+				if (playerPosition > player.__backgroundMusic.end) {
+					player.__backgroundHackForiOS();
+				}
+
+			}
+
+		}
+
+
+	},
 
 	/*
 	 * This will check an array for playable resources, depending on the previously
@@ -374,17 +412,17 @@ Jukebox.Manager.prototype = {
 	},
 
 	/*
-	 * This function adds a Jukebox to the JukeboxManager's loop
-	 * @params {Jukebox Instance}
+	 * This function adds a jukebox.Player to the jukebox.Manager's loop
+	 * @params {jukebox.Player} jukebox.Player instance
 	 */
-	addJukebox: function(jukebox) {
+	add: function(player) {
 
 		if (
-			jukebox instanceof Jukebox
-			&& this.__jukeboxes[jukebox.id] === undefined
+			player instanceof jukebox.Player
+			&& this.__players[player.id] === undefined
 		) {
-			this.__jukeboxesLength++;
-			this.__jukeboxes[jukebox.id] = jukebox;
+			this.__playersLength++;
+			this.__players[player.id] = player;
 			return true;
 		}
 
@@ -393,17 +431,17 @@ Jukebox.Manager.prototype = {
 	},
 
 	/*
-	 * This function removes a Jukebox from the JukeboxManager's loop
-	 * @params {Jukebox Instance} jukebox
+	 * This function removes a jukebox.Player from the jukebox.Manager's loop
+	 * @params {jukebox.Player} jukebox.Player instance
 	 */
-	removeJukebox: function(jukebox) {
+	remove: function(player) {
 
 		if (
-			jukebox instanceof Jukebox
-			&& this.__jukeboxes[jukebox.id] !== undefined
+			player instanceof jukebox.Player
+			&& this.__players[player.id] !== undefined
 		) {
-			this.__jukeboxesLength--;
-			delete this.__jukeboxes[jukebox.id];
+			this.__playersLength--;
+			delete this.__players[player.id];
 			return true;
 		}
 
@@ -417,19 +455,23 @@ Jukebox.Manager.prototype = {
 	 * DON'T USE IT.
 	 *
 	 */
-	addQueueEntry: function(pointer, jukeboxId) {
+	addToQueue: function(pointer, playerId) {
 
 		if (
 			(typeof pointer === 'string' || typeof pointer === 'number')
-			&& this.__jukeboxes[jukeboxId] !== undefined
+			&& this.__players[playerId] !== undefined
 		) {
 
 			this.__queue.push({
 				pointer: pointer,
-				origin: jukeboxId
+				origin: playerId
 			});
 
+			return true;
+
 		}
+
+		return false;
 
 	}
 

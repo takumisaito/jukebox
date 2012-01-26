@@ -1,11 +1,11 @@
 <!doctype html>
 <html>
 <head>
-	<title>iOS Jukebox Demo</title>
+	<title>iOS Demo</title>
     <meta charset="utf-8" />
 
-	<script src="../src/Jukebox.js"></script>
-	<script src="../src/JukeboxManager.js"></script>
+	<script src="../src/Player.js"></script>
+	<script src="../src/Manager.js"></script>
 
 	<link rel="stylesheet" href="./media/layout.css">
 
@@ -28,23 +28,23 @@
 
 <div class="wrapper center">
 	<div>
-		<button onclick="initJukebox()">Initialize autoplaying Jukebox</button>
+		<button onclick="initPlayer()">Initialize autoplaying jukebox.Player</button>
 		<button onclick="playEffect()">Play Sound Effect</button>
 	</div>
 </div>
 
 <script>
-var initJukebox,
+var initPlayer,
 	playEffect;
 
 (function() {
 
-	var myJukebox;
+	var myPlayer;
 
-	initJukebox = function() {
+	initPlayer = function() {
 
 		// Avoid multiple Jukeboxes on multi-channel environments
-		if (myJukebox !== undefined) {
+		if (myPlayer !== undefined) {
 			return;
 		}
 
@@ -79,13 +79,13 @@ var initJukebox,
 	
 		};
 
-		myJukebox = new Jukebox(settings);
+		myPlayer = new jukebox.Player(settings);
 
 	};
  
 
 	playEffect = function() {
-		myJukebox.play('cajon-2');
+		myPlayer.play('cajon-2');
 	};
 
 })();
