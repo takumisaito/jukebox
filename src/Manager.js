@@ -65,7 +65,7 @@ jukebox.Manager = function(settings) {
 		}, 20);
 
 	} else {
-		Jukebox.Manager.__initialized = true;
+		jukebox.Manager.__initialized = true;
 	}
 
 };
