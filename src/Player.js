@@ -81,7 +81,6 @@ jukebox.Player.prototype = {
 		resources: [], // contains the audio file urls
 		autoplay: false, // deactivated by default
 		spritemap: {}, // spritemap entries
-		loop: false, // loops the complete stream again
 		flashMediaElement: './swf/FlashMediaElement.swf',
 		timeout: 1000 // timeout if EventListener on "canplaythrough" fails
 	},

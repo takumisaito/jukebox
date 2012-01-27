@@ -41,7 +41,7 @@ Sequencer.prototype = {
 	__init: function() {
 
 		for (var j in this.jukeboxSettings) {
-			this.__jukeboxes[j] = new Jukebox(this.jukeboxSettings[j]);
+			this.__jukeboxes[j] = new jukebox.Player(this.jukeboxSettings[j]);
 			this.__timeline[j] = {};
 		}
 

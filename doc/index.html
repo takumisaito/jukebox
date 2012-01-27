@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Documentation</title>
+		<title>Jukebox Documentation / Overview</title>
 		<meta charset="utf-8" />
 
 		<link rel="stylesheet" href="./media/layout.css">
@@ -14,21 +14,24 @@
 	<div>
 		<a href="index.html" class="active">Documentation</a>
 		<a href="api.html">API</a>
+		<a href="demos.html">Demos</a>
 	</div>
 </header>
 
 <aside id="navigation">
 	<nav>
 		<a href="#what">What is Jukebox?</a>
-		<a href="#why">Why using Jukebox?</a>
 		<a href="#important">Important Hints</a>
 		<a href="#support-html5">HTML5 Support</a>
 		<a href="#support-flash">Flash Support</a>
 		<a href="#getting-started">Getting Started</a>
+		<a href="#settings-player">Settings (Player)</a>
+		<a href="#settings-manager">Settings (Manager)</a>
+		<a href="#initialization">Initialization</a>
 	</nav>
 </aside>
 
-<h1>Documentation</h1>
+<h1>Overview</h1>
 
 <article id="what">
 	<h2>What is Jukebox?</h2>
@@ -51,14 +54,6 @@
 	</p>
 </article>
 
-<article id="why">
-	<h2>Why using Jukebox?</h2>
-
-	<p>
-	</p>
-
-</article>
-
 <article id="important">
 
 	<h2>Important Issues and Hints</h2>
@@ -68,7 +63,6 @@
 		with the Audio Decoder. getCurrentTime() will return false
 		values that are incorrect, because the internal used
 		decoder is not behaving the same way as it should.
-		<br>
 		Confirmed is that this could be a problem related to VBR
 		encoded files.
 	</p>
@@ -120,7 +114,7 @@
 
 <article id="support-html5">
 
-	<h2>Supported Environments (HTML5 Audio)</h2>
+	<h2>HTML5 Audio Support</h2>
 	<small>sorted by Browser's Engine</small>
 
 	<h3>Gecko</h3>
@@ -161,7 +155,7 @@
 
 <article id="support-flash">
 
-	<h2>Supported Environments (Flash Fallback)</h2>
+	<h2>Flash Support (Fallback)</h2>
 	<small>sorted by Browser's Engine</small>
 
 	<h3>Trident</h3>
@@ -179,20 +173,158 @@
 <article id="getting-started">
 
 	<h2>Getting Started</h2>
+	<p>
+		Jukebox makes usage of spritemap-based soundfiles. That means every soundfile consists of different
+		<q>sprite entries</q> that can be played. We chose to use spritemaps, because every codec is more
+		effective when encoding large files - and download speed is a huge plus when considering that music
+		and sounds are by far the largest files in games.
+		<br><br>
+		Another reason for choosing a spritemap structure was the latency on mobile devices, especially on
+		iOS where initial playback can take up to 820ms due to their implementation using iTunes for playback.
+	</p>
+
+
+	<h3>Create the Audio File</h3>
+	<p>
+		The sprite entries can be looped, such as a background music - or used as sound effects.
+		<br><br>
+		The structure of an audio sprite map should look like this, to avoid any issues with playback latency:
+
+		<ol>
+			<li>background music (fade-in / fade-out)</li>
+			<li>1.00 second silence</li>
+			<li>sound effect #1</li>
+			<li>1.00 second silence</li>
+			<li>sound effect #2</li>
+			<li>1.00 second silence</li>
+			<li>sound effect #3</li>
+			<li>1.00 second silence</li>
+		</ol>
+
+	</p>
 
 	<p>
-
-
+		<b>Important</b>: For easier playback, you should round up the silence. So it's much easier and more
+		precise. The Audio API behind is in seconds - so if you choose to start a sprite entry at e.g.
+		3.075s you will have a delay of at least 0.005s (minimum, worst case plus loop interval timeout).
+		<br><br>
+		My recommendation is to round up to full seconds instead to avoid that problem. Place the sprite entry
+		at 4.00 seconds.
 	</p>
 
 </article>
 
-<script>
-(function() {
+<article id="settings-player">
+
+	<h2>jukebox.Player Settings</h2>
+	<b>Required:</b>
+	<ul>
+		<li><b>resources</b>: (<mark>Array</mark>) array of urls to your sound files</li>
+		<li><b>spritemap</b>: (<mark>Object</mark>) <a href="#settings-player-spritemap">spritemap settings</a></li>
+	</ul>
+
+	<b>Optional:</b>
+	<ul>
+		<li><b>autoplay</b>: (<mark>String</mark>) id of sprite entry (that is defined in <mark>spritemap</mark>)</li>
+		<li><b>timeout</b>: (<mark>Number</mark>) timeout in milliseconds if the EventListener fails on "canplaythrough" event. Defaulted by 1000.</li>
+		<li><b>flashMediaElement</b>: (<mark>String</mark>) url to the FlashMediaElement.swf (optional, required for flash fallback)</li>
+	</ul>
 
 
+	<h3 id="settings-player-spritemap">Spritemap Settings</h3>
+	<p>
+		The spritemap settings are the data representation of your audio file.
+		<br>
+		This is an example that gives you an idea of how to setup:
+	</p>
 
-})();
-</script>
+	<pre>
+	var player = new jukebox.Player({
+
+		// ... other settings
+
+		spritemap: {
+			bgmusic: {
+				start: 0.00,
+				end:  20.00,
+				loop: true
+			},
+			shoot: {
+				start: 21.00,
+				end: 22.50
+			},
+			kaching: {
+				start: 24.00,
+				end: 24.75
+			}
+		}
+
+	});
+	</pre>
+
+</article>
+
+<article id="settings-manager">
+
+	<h2>jukebox.Manager Settings</h2>
+	<b>Optional:</b>
+	<ul>
+		<li><b>useFlash</b>: (<mark>Boolean</mark>) <mark>True</mark> will enforce flash fallback, so html5 audio is ignored.</li>
+		<li><b>useGameLoop</b>: (<mark>Boolean</mark>) <mark>True</mark> will let you use your own game loop.</li>
+	</ul>
+
+	<p>
+		<mark>useGameLoop</mark> is an important settings for usage with performance-critic game loop intervals. It allows you to call
+		jukebox.Manager.loop() inside your game loop, so that you can avoid usage of multiple intervals.
+		<br><br>
+		Please take a look at the <a href="demos.html#game">Game Integration demo</a> for more details.
+	</p>
+
+</article>
+
+<article id="initialization">
+
+	<h3>Initialization Example</h3>
+	<p>
+		This example uses the available resources from the demos folder. It automatically starts to play the
+		<q>bgmusic</q> sprite entry.
+		<br>
+		Note that there's no <a href="api.html#play">play()</a> call, so only
+		the background music is repeating all the time due to it's <q>loop</q> flag.
+	</p>
+
+	<pre class="executable">
+	window.demo = new jukebox.Player({
+
+		resources: [
+			'../demo/media/spritemap-cajon.ac3',
+			'../demo/media/spritemap-cajon.mp3',
+			'../demo/media/spritemap-cajon.m4a',
+			'../demo/media/spritemap-cajon.ogg',
+			'../demo/media/spritemap-cajon.amr'
+		],
+
+		autoplay: 'bgmusic',
+
+		spritemap: {
+			bgmusic: {
+				start: 0.00,
+				end: 4.20,
+				loop: true
+			},
+			effect: {
+				start: 5.00,
+				end: 9.30
+			}
+		}
+
+	});
+	</pre>
+
+</article>
+
+<script src="../src/Player.js"></script>
+<script src="../src/Manager.js"></script>
+<script src="doc.js"></script>
 </body>
 </html>

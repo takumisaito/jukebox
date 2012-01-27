@@ -16,7 +16,7 @@ Features
 * Sound-Spritemap Entries for easier playback
 * Multiple Jukeboxes for parallel playback
 
-Important: The old IE9 beta and iOS are known to allow only one Jukebox to run, no parallel playback possible.
+Important: iOS devices are known to allow only one Jukebox to run, no parallel playback possible.
 
 
 **Jukebox Manager adds the following features:**
@@ -35,196 +35,21 @@ The Jukebox Manager offers Codec and Feature detection - to determine which kind
 If you want to still use Jukebox without Jukebox Manager, you will have to set *resources* to an Array containing only one resource.
 
 
-Settings
---------
-
-These are the supported Jukebox settings you can pass through its constructor:
-
-* resources = *array of urls to sound files*
-* autoplay = 'spritemap-entry'
-* spritemap = 'object'
-
-These are optional settings for the Flash Fallback:
-
-* flashMediaElement = 'url/to/FlashMediaElement.swf' (default is './swf/FlashMediaElement.swf')
-
-An example spritemap.entry looks like this: ("entry" is the name of the spritemap entry which is used for autoplay or stream playback)
-
-* spritemap.entry.start = *time*
-* spritemap.entry.end = *time*
-* spritemap.entry.loop = *Boolean*
-
-
-
-```js
-var mySettings = {
-	// ...
-	spritemap: {
-
-		"background-music": {
-			"start": 1.00,
-			"end": 20.00,
-			"loop": false
-		},
-
-		"test-entry": {
-			"start": 21.00,
-			"end": 25.00
-		}
-	}
-	// ...
-};
-```
-
-
-
-Settings for jukebox.Manager
-----------------------------
-
-The jukebox.Manager is transparently running in the background. But it also allows you to modify the feature detection to enforce flash usage,
-which might be the case on some systems.
-
-* useFlash = *Boolean* 'true' will enforce flash usage. Defaulted with 'false'.
-* useGameLoop: *Boolean* 'true' will disable the jukebox.Manager interval. You can then call jukebox.Manager.loop() inside your game loop, which may be required for low-end devices due to performance-critic intervals.
-
-
-Setting Up a Sound Sprite
--------------------------
-
-As there are several issues with playing individual files through the HTML5 audio API, we try to prevent some of them by using sound sprites. Since the timer resolution of today's browsers, especially mobile ones, isn't great, it's important to leave a silence gap between every actual sound in the sprite.
-
-Example for a sound sprite structure:
-
-* 1 second silence
-* First sound
-* 1 second silence
-* Second sound
-* 1 second silence
-* Third sound
-
 Known Issues
 ------------
 
-There's the problem with asynchronous playback, which can't be avoided on the JavaScript-side of the implementation. Delays were measured up to 820ms on initial playback. iOS has also a problem when falling into sleep mode, as iTunes will play back the sound file afterwards without stopping it.
+There's the problem with asynchronous playback, which can't be avoided on the JavaScript-side of the implementation.
+Delays were measured up to 820ms on initial playback. iOS has also a problem when falling into sleep mode, as iTunes will play back the sound
+file afterwards without stopping it.
 
-Additionally, iOS' security model prevents a website from playing sounds without prior user interaction. Thus, you will have to use a button or similar that will call myJukebox.play('background-birds') or similar (see > Usage for more details).
-
-
-Usage
------
-
-First, you will have to know that there can be several Jukebox instances in parallel.
-
-The transparent Jukebox Manager allows so-called work delegation. This work delegation concept lets you use a single Jukebox. You create only one instance, but you are able to play multiple sounds in parallel with it.
-
-For example, you can have an *autoplay* setup for a background music, but you can still play other sound spritemap entries afterwards, while the background music is still played.
+Additionally, iOS' security model prevents a website from playing sounds without prior user interaction. Thus, you will have to use a button
+or similar that will call player.play('background-birds') or similar.
 
 
-**Creating a Jukebox**
+Documentation
+-------------
 
-```js
-var player = new jukebox.Player({
+There's a huge documentation with demos, examples and best practises.
+Take a look at it! It's located in the /doc folder.
 
-	"resources": [
-		"./url/to/spritemap.mp3",
-		"./url/to/spritemap.ac3",
-		"./url/to/spritemap.ogg",
-		"./url/to/spritemap.amr", // 3gp / amr codec is supported on most devices. Crappy codec, but cool fallback! =)
-	],
-
-	"autoplay": "background-birds",
-
-	"spritemap": {
-	
-		"background-birds": {
-			"start": 1.00,
-			"end": 41.00,
-			"loop": true
-		},
-
-		"cricket-chirp": {
-			"start": 42.00,
-			"end": 44.75
-		}
-	
-	}
-
-});
-
-// Example call of the Jukebox API
-// Note that this is a looping background
-player.play('background-birds');
-
-window.setTimeout(function() {
-	player.play('cricket-chirp');
-	// will delegate the work to the internal next free clone,
-	// because the origin Jukebox is busy
-}, 1000);
-
-window.setTimeout(function() {
-	player.play('cricket-chirp', true);
-	// will enforce playback and result will be instant playback
-	// and no background music is played afterwards
-}, 5000);
-```
-
-
-Public (jukebox.Player) API
------------------------
-
-Example of a Jukebox API Call:
-
-```js
-// Note that myJukebox was initialized already like in the previous example (see > Usage)
-
-player.play("background-music"); // fastest
-player.play(20.10); // slower, will search for matching spritemap entry
-```
-
-
-* `play(to, enforce)`
-	* to: (float) time in seconds
-	* to: (string) spritemap-entry
-	* enforce: (boolean) true will disable work delegation and cause instant playback
-
-This function will start playback of the given spritemap entry.
-You can pass through a value of a time (which is inside a sprite entry), too. It will automatically loop a background music
-if it was configured to loop.
-
-
-* `stop()`
-
-This function will stop the playback of a stream.
-It will reset the current position of the played stream to the beginning.
-
-
-* `pause()`
-
-This function will pause the playback of a stream.
-It will save the current position, so that you are able to resume playback later.
-
-
-* `resume()`
-
-This function will resume the playback of a stream.
-It will start playback at the last cached position. If no position was cached before, it will start from the current position of the stream.
-
-
-* `setVolume(to)`
-	* to: (float) volume (min = 0, max = 1.0)
-
-This function will set the volume to the given value.
-Hint: Some systems like iOS have no support for modifying the volume.
-
-
-* `getCurrentTime()`
-
-This function will return the current position of the stream.
-
-
-* `setCurrentTime(to)`
-	* to: (float) time in seconds
-
-This function will *try* to set the current position of the stream. It may fail if the stream is not ready for that, 
-e.g. if download is still in progress or background process is not ready for playback etc.
 
