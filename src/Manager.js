@@ -16,16 +16,11 @@ if (this.jukebox === undefined) {
 
 
 /*
- * This is the transparent jukebox.Manager that runs in the background
+ * This is the transparent jukebox.Manager that runs in the background.
+ * You shouldn't have to call this constructor, only if you want to overwrite the
+ * defaults for having an own gameloop.
  *
- * You shouldn't call the constructor, a jukebox.Manager instance is automatically
- * created if you create a jukebox.Player instance.
- *
- * If you need to call the constructor before instanciating the jukebox.Player,
- * you should take a look for the Game Loop integration demo (demo/game.html)
- *
- *
- * @param {Object} settings The settings object (see defaults for more details)
+ * The first parameter @settings {Map} overwrites the {#defaults}.
  */
 jukebox.Manager = function(settings) {
 
@@ -72,9 +67,19 @@ jukebox.Manager = function(settings) {
 
 jukebox.Manager.prototype = {
 
+	/*
+	 * The defaults {Map} consist of two different flags.
+	 *
+	 * The @useFlash {Boolean} which is available for enforcing flash
+	 * usage and the @useGameLoop {Boolean} that allows you to use your
+	 * own game loop for avoiding multiple intervals inside the Browser.
+	 *
+	 * If @useGameLoop is set to {True} you will have to call the
+	 * {#jukebox.Manager.loop} method everytime in your gameloop.
+	 */
 	defaults: {
-		useFlash: false, // enforce Flash Fallback
-		useGameLoop: false // use own game loop (interval)
+		useFlash: false,
+		useGameLoop: false
 	},
 
 	__detectFeatures: function() {
@@ -158,9 +163,7 @@ jukebox.Manager.prototype = {
 
 		/*
 		 * Flash Audio Support
-		 *
 		 * Hint: All Android devices support Flash, even Android 1.6 ones
-		 *
 		 */
 		this.features.flashaudio = !!navigator.mimeTypes['application/x-shockwave-flash'] || !!navigator.plugins['Shockwave Flash'] || false;
 
@@ -265,10 +268,12 @@ jukebox.Manager.prototype = {
 	 */
 
 	/*
-	 * This is the jukebox.Manager's stream-correction loop.
+	 * This method is the stream-correction sound loop.
 	 *
-	 * You are "allowed" to call it yourself, if you created the jukebox.Manager
-	 * instance with useGameLoop = true in the constructor's settings.
+	 * In case you have overwritten the {jukebox.Manager} instance
+	 * by yourself (with calling the constructor) and in case you
+	 * have set the #settings.useGameLoop to {True}, you will have to
+	 * call this method every time inside your gameloop.
 	 */
 	loop: function() {
 
@@ -382,11 +387,14 @@ jukebox.Manager.prototype = {
 	},
 
 	/*
-	 * This will check an array for playable resources, depending on the previously
-	 * detected codecs and features.
+	 * {String|Null} This method will check a @resources {Array} for playable resources
+	 * due to codec and feature detection.
 	 *
-	 * @param {Array} resources The array of resources (e.g. [ "first/file.ogg", "./second/file.mp3" ])
-	 * @returns {String|Null} resource The playable resource. If no resource was found, null is returned.
+	 * It will return a {String} containing the preferred resource and {Null} if no
+	 * playable resources was found.
+	 *
+	 * Hint: The highest preferred is the 0-index in the @resources {Array}. The latest
+	 * index is the one with lowest preference.
 	 */
 	getPlayableResource: function(resources) {
 
@@ -412,8 +420,11 @@ jukebox.Manager.prototype = {
 	},
 
 	/*
-	 * This function adds a jukebox.Player to the jukebox.Manager's loop
-	 * @params {jukebox.Player} jukebox.Player instance
+	 * {Boolean} This method will add a @player {jukebox.Player} instance to the stream-correction
+	 * sound loop.
+	 *
+	 * It will return {True} if the {jukebox.Player} instance was successfully added
+	 * and {False} if the @player was an invalid parameter.
 	 */
 	add: function(player) {
 
@@ -431,8 +442,11 @@ jukebox.Manager.prototype = {
 	},
 
 	/*
-	 * This function removes a jukebox.Player from the jukebox.Manager's loop
-	 * @params {jukebox.Player} jukebox.Player instance
+	 * {Boolean} This method will remove a @player {jukebox.Player} instance from
+	 * the stream-correction sound loop.
+	 *
+	 * It will return {True} if the {jukebox.Player} instance was successfully removed
+	 * and {False} if the @player was an invalid parameter.
 	 */
 	remove: function(player) {
 
@@ -450,10 +464,9 @@ jukebox.Manager.prototype = {
 	},
 
 	/*
-	 * This function is kindof public, but only used for Queue Delegation
+	 * This method is kindof public, but only used internally
 	 *
-	 * DON'T USE IT.
-	 *
+	 * DON'T USE IT!
 	 */
 	addToQueue: function(pointer, playerId) {
 
