@@ -1,94 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset='utf-8'>
-
-  <title>zynga/jukebox @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #797979;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #868686; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #868686; }
-    h3 { text-align: center; color: #868686; }
-    a { color: #868686; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
-
+	<head>
+		<title>Jukebox Documentation / Overview</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="media/layout.css">
+	</head>
 <body>
-  <a href="https://github.com/zynga/jukebox"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
 
-  <div id="container">
+<header>
+	Jukebox
+	<div>
+		<a href="index.html" class="active">Overview</a>
+		<a href="details.html">Details</a>
+		<a href="api.html">API</a>
+		<a href="demos.html">Demos</a>
+	</div>
+</header>
 
-    <div class="download">
-      <a href="https://github.com/zynga/jukebox/zipball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
-      <a href="https://github.com/zynga/jukebox/tarball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
-    </div>
+<a href="https://github.com/zynga/jukebox">
+	<img id="forkme" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
+</a>
 
-    <h1><a href="https://github.com/zynga/jukebox">jukebox</a>
-      <span class="small">by <a href="https://github.com/zynga">zynga</a></span></h1>
+<article>
+	<h2>Sophisticated Audio Playback for the web</h2>
+	<p>
+		Jukebox is a component to handle the playback of music and sound
+		effects across multiple web browsers and operating systems. <br>
+		It is designed for ultra-low performance environments, such as
+		mobiles - and is even able to deliver Android 1.6+ via Flash fallback.
+	</p>
+</article>
 
-    <div class="description">
-      Sophisticated audio playback for the web.
-    </div>
+<article>
+	<h2>Download</h2>
+	<p>
+		<a class="nodeco" href="https://github.com/zynga/jukebox/zipball/master">
+			<img border="0" width="90" src="https://github.com/images/modules/download/zip.png">
+		</a>
+		<a class="nodeco" href="https://github.com/zynga/jukebox/tarball/master">
+			<img border="0" width="90" src="https://github.com/images/modules/download/tar.png">
+		</a>
+	</p>
+ 
+	<p>
+		You can also clone the project with <a href="http://git-scm.com">Git</a> by running:
+	</p>
+	<pre>$ git clone git://github.com/zynga/jukebox</pre>
 
-    
+	<p>
+		Get the source code on GitHub : <a href="https://github.com/zynga/jukebox">zynga/jukebox</a>
+	</p>
 
-    
+</article>
 
-    
-      <h2>Install</h2>
-      <p>Please take a look at the README</p>
-    
+<article>
+	<h2>Install</h2>
+	<p>
+		Installation is pretty simple. Just copy the files located in the src/ folder to your
+		project and include them in the following order:
+		<ul>
+			<li>src/Player.js</li>
+			<li>src/Manager.js</li>
+		</ul>
+	</p>
+</article>
+<article>
+	<h2>Flash Fallback</h2>
+	<p>
+		The (alternative) Flash fallback requires the compiled swf from src/swf/FlashMediaElement.as,
+		a compiled version is located in the demo/media/swf folder.
+	</p>
+	<p>
+		Make sure to pass through the correct URL to the swf file.<br>
+		See <a href="details#settings-player">jukebox.Player Settings</a> for more details.
+	</p>
+</article>
 
-    
-      <h2>License</h2>
-      <p>MIT License</p>
-    
+<article>
+	<h2>License</h2>
+	<pre>
+Copyright (c) 2011 Zynga Inc., http://zynga.com/
 
-    
-      <h2>Authors</h2>
-      <p>Christoph Martens (christoph@martens.ms)<br/>      </p>
-    
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-    
-      <h2>Contact</h2>
-      <p>Zynga Germany (germany@zynga.com)<br/>      </p>
-    
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="https://github.com/zynga/jukebox/zipball/master">zip</a> or
-      <a href="https://github.com/zynga/jukebox/tarball/master">tar formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/zynga/jukebox</pre>
-    </p>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	</pre>
+</article>
 
-    <div class="footer">
-      get the source code on GitHub : <a href="https://github.com/zynga/jukebox">zynga/jukebox</a>
-    </div>
-
-  </div>
+<article>
+	<h2>Authors / Contact</h2>
+	<p>Christoph Martens (christoph@martens.ms)</p>
+	<p>Zynga Germany (germany@zynga.com)</p>
+</article>
 
 </body>
 </html>
