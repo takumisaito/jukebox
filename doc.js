@@ -4,11 +4,11 @@
 	var settings = {
 
 		resources: [
-			'../demo/media/spritemap-cajon.ac3',
-			'../demo/media/spritemap-cajon.mp3',
-			'../demo/media/spritemap-cajon.m4a',
-			'../demo/media/spritemap-cajon.ogg',
-			'../demo/media/spritemap-cajon.amr'
+			'demo/media/spritemap-cajon.ac3',
+			'demo/media/spritemap-cajon.mp3',
+			'demo/media/spritemap-cajon.m4a',
+			'demo/media/spritemap-cajon.ogg',
+			'demo/media/spritemap-cajon.amr'
 		],
 
 		spritemap: {
