@@ -14,17 +14,21 @@
 	
 <header>Jukebox</header>
 
-<h2>iOS Security Model Usage</h2>
+<article>
+	<h2>iOS Security Model Usage</h2>
+	<p>
+		On iOS, the security model prevents automatic playback of Audio.
+	</p>
+	<p>
+		There's only one method to bypass the security model, using an interval.<br>
+		Therefore you will have to initialize the Jukebox inside the UI event callstack.
+	</p>
+	<p>
+		<b>The result</b>: You are able to playback a background music that continues
+		right after playing another sprite entry like in-game sound effects.
+	</p>
+</article>
 
-<p class="first">
-	On iOS, the security model prevents automatic playback of Audio.
-	<br><br>
-	There's only one method to bypass the security model, using an interval.<br>
-	Therefore you will have to initialize the Jukebox inside the UI event callstack.
-	<br><br>
-	The result: You are able to playback a background music that continues
-	right after playing another sprite entry like in-game sound effects.
-</p>
 
 <div class="wrapper center">
 	<div>

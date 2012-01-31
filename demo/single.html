@@ -14,18 +14,20 @@
 
 <header>Jukebox</header>
 
-<h2>Single Playback Demo</h2>
-<p class="first">
-	Tap the buttons to playback the different sprite entries.<br>
-	You can see a difference between the optional forced playback and defaulted automatic-cloning mode
-	in environments that support parallel playback.
-</p>
+<article>
+	<h2>Single Playback Demo</h2>
+	<p>
+		Tap the buttons to playback the different sprite entries.<br>
+		You can see a difference between the optional forced playback and defaulted automatic-cloning mode
+		in environments that support parallel playback.
+	</p>
 
-<h4>Default Playback</h4>
-<p class="center" id="demo-default"></p>
+	<h4>Default Playback</h4>
+	<p class="center" id="demo-default"></p>
 
-<h4>Forced playback</h4>
-<p class="center" id="demo-forced"></p>
+	<h4>Forced playback</h4>
+	<p class="center" id="demo-forced"></p>
+</article>
 
 <div id="volume" class="wrapper">
 	<h4>Volume</h4>
@@ -34,12 +36,12 @@
 	</div>
 </div>
 
-<h4>Additional controls</h4>
-<p class="center">
+<article class="center">
+	<h4>Additional controls</h4>
 	<button onclick="myPlayer.stop()">stop()</button>
 	<button onclick="myPlayer.pause()">pause()</button>
 	<button onclick="myPlayer.resume()">resume()</button>
-</p>
+</article>
 
 <script>
 var myPlayer;

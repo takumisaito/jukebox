@@ -14,19 +14,23 @@
 
 <header>Jukebox</header>
 
-<h2>Game Loop Integration Demo</h2>
-<p class="first">
-	To avoid performance-troubles with multiple intervals in your mobile browser environment,
-	you are able to modify the behaviour of the jukebox.Manager's loop and you are able to call
-	it yourself from inside your game loop.
-	<br><br>
-	Remember that the more often the sound loop is called, the better is the reaction on stream
-	corrections, but the lesser is the performance of your game.
-	<br><br>
-	<b>Important</b>: An interval below 15.6ms doesn't make sense due to underlying architectures.<br>
-	Read <a href="http://software.intel.com/en-us/articles/cpu-power-utilization-on-intel-architectures/">this article on software.intel.com</a> for more details.<br>
-	My personal advice is a sound loop that runs every 20ms - 50ms.
-</p>
+<article>
+	<h2>Game Loop Integration Demo</h2>
+	<p>
+		To avoid performance-troubles with multiple intervals in your mobile browser environment,
+		you are able to modify the behaviour of the jukebox.Manager's loop and you are able to call
+		it yourself from inside your game loop.
+	</p>
+	<p>
+		Remember that the more often the sound loop is called, the better is the reaction on stream
+		corrections, but the lesser is the performance of your game.
+	</p>
+	<p>
+		<b>Important</b>: An interval below 15.6ms doesn't make sense due to underlying architectures.<br>
+		Read <a href="http://software.intel.com/en-us/articles/cpu-power-utilization-on-intel-architectures/">this article on software.intel.com</a> for more details.<br>
+		My personal advice is a sound loop that runs every 20ms - 50ms.
+	</p>
+</article>
 
 <div class="wrapper center">
 	<div>
