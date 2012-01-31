@@ -32,12 +32,20 @@ h2 {
 	border-bottom: 1px solid #ccc;
 }
 
-p {
+p, article {
 	margin: 0px auto;
 	width: 80%;
 	max-width: 900px;
 	padding: 0;
 	color: #444;
+}
+
+p a {
+	color: #922;
+}
+
+p code {
+	text-align: center;
 }
 
 .wrapper {

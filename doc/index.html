@@ -20,7 +20,6 @@
 
 <aside id="navigation">
 	<nav>
-		<a href="#what">What is Jukebox?</a>
 		<a href="#important">Important Hints</a>
 		<a href="#support-html5">HTML5 Support</a>
 		<a href="#support-flash">Flash Support</a>
@@ -32,27 +31,6 @@
 </aside>
 
 <h1>Overview</h1>
-
-<article id="what">
-	<h2>What is Jukebox?</h2>
-
-	<p>
-		Jukebox is a component to handle the playback of music and sound
-		effects across multiple web browsers and operating systems.
-	</p>
-
-	<p>
-		Jukebox is designed for ultra-low performance environments, such
-		as mobiles - and is even able to deliver Android 1.6+ via Flash
-		fallback.
-	</p>
-
-	<p>
-		This documentation will explain how to use Jukebox and it will
-		describe many of the issues we found while developing a proper
-		playback environment for mobile devices.
-	</p>
-</article>
 
 <article id="important">
 
@@ -71,7 +49,12 @@
 	<p>
 		iOS allows only playback of a single sound in parallel.
 		It has also latencies up to 820ms (initial playback) due to the
-		implementation of using iTunes as a low-priority thread.
+		implementation of using iTunes as a low-priority thread and issues
+		with encoded audio formats.
+	</p>
+	<p>
+		There's a further <a href="demo/ios-aiff.html">demo using an AIFF</a>
+		container and the IMA4 codec that allows instant playback there.
 	</p>
 	<p>
 		The <b>iOS security model</b> only allows playback of sound using the
