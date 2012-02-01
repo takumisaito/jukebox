@@ -516,7 +516,7 @@ jukebox.Player.prototype = {
 
 			this.context.volume = value;
 
-			if (this.context.volume.toString.match(new RegExp(value / 100))) {
+			if (this.context.volume.toString().match(new RegExp(value / 100))) {
 				return true;
 			}
 
