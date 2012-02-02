@@ -39,6 +39,10 @@ jukebox.Player = function(settings, origin) {
 	}
 
 
+	/**
+	 * @break {jukebox.Manager}
+	 */
+
 	// Pseudo-Singleton to prevent double-initializaion
 	if (Object.prototype.toString.call(jukebox.Manager) === '[object Function]') {
 		jukebox.Manager = new jukebox.Manager();
