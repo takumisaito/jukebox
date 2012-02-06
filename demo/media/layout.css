@@ -22,22 +22,36 @@ header {
 	position: relative;
 }
 
-h2 {
-	font-weight: normal;
-	color: #888;
-	margin: 0 auto;
-	width: 80%;
-	max-width: 900px;
-	padding-bottom: 10px;
-	border-bottom: 1px solid #ccc;
-}
-
-p {
+article {
 	margin: 0px auto;
 	width: 80%;
 	max-width: 900px;
 	padding: 0;
 	color: #444;
+}
+
+article h2 {
+	font-weight: normal;
+	color: #888;
+	margin: 0 auto;
+	width: 80%;
+	max-width: 900px;
+	padding: 0 10% 10px 10%;
+	border-bottom: 1px solid #ccc;
+}
+
+article a {
+	color: #922;
+}
+
+article code {
+	display: inline-block;
+	margin: 0.5em 0;
+	padding: 0.5em;
+	text-align: center;
+	background: #ffffcc;
+	border: 1px solid #ccc;
+	border-radius: 6px 6px 6px 6px;
 }
 
 .wrapper {
@@ -151,7 +165,6 @@ mark {
 
 .timeline {
 	position: relative;
-	max-width: 530px;
 	height: 30px;
     line-height: 30px;
 	margin: 0 0 0 1em;
