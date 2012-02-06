@@ -13,12 +13,12 @@
 this.jukebox = {};
 
 /*
- * This will construct a jukebox.Player instance.
- * The jukebox.Manager itself is transparent and irrelevant for usage.
+ * The first parameter @settings {Map} defines the settings of
+ * the created instance which overwrites the {#defaults}.
  *
- * @param {Object} settings The settings object (see defaults for more details)
- * @param {jukebox.id} [origin] The optional origin's id of the jukebox.Player,
- * used by jukebox.Manager for dynamic clone balancing
+ * The second optional parameter @origin {Number} is a unique id of
+ * another {jukebox.Player} instance, but it is only used internally
+ * by the {jukebox.Manager} for creating and managing clones.
  */
 jukebox.Player = function(settings, origin) {
 
@@ -38,6 +38,10 @@ jukebox.Player = function(settings, origin) {
 		}
 	}
 
+
+	/**
+	 * @break {jukebox.Manager}
+	 */
 
 	// Pseudo-Singleton to prevent double-initializaion
 	if (Object.prototype.toString.call(jukebox.Manager) === '[object Function]') {
@@ -68,22 +72,33 @@ jukebox.Player = function(settings, origin) {
 
 };
 
-
-
-/*
- * The unique Jukebox ID
- */
 jukebox.__jukeboxId = 0;
 
 jukebox.Player.prototype = {
 
+	/*
+	 * The defaults which are overwritten by the {#constructor}'s
+	 * settings parameter.
+	 *
+	 * @resources contains an {Array} of File URL {String}s
+	 * @spritemap is a Hashmap containing multiple @sprite-entry {Object}
+	 *
+	 * @autoplay is an optional {String} that autoplays a @sprite-entry
+	 *
+	 * @flashMediaElement is an optional setting that contains the
+	 * relative URL {String} to the FlashMediaElement.swf for flash fallback.
+	 *
+	 * @timeout is a {Number} in milliseconds that is used if no "canplaythrough"
+	 * event is fired on the Audio Node.
+	 */
 	defaults: {
-		resources: [], // contains the audio file urls
-		autoplay: false, // deactivated by default
-		spritemap: {}, // spritemap entries
+		resources: [],
+		autoplay: false,
+		spritemap: {},
 		flashMediaElement: './swf/FlashMediaElement.swf',
-		timeout: 1000 // timeout if EventListener on "canplaythrough" fails
+		timeout: 1000
 	},
+
 
 	/*
 	 * PRIVATE API
@@ -353,12 +368,12 @@ jukebox.Player.prototype = {
 	 */
 
 	/*
-	 * This will play a given position on the stream.
-	 * Optional argument is the enforce flag that will avoid queueing and will
-	 * directly start the stream playback at the position.
+	 * This method will try to playback a given @pointer position of the stream.
+	 * The @pointer position can be either a {String} of a sprite entry inside
+	 * {#settings.spritemap} or a {Number} in seconds.
 	 *
-	 * @param {Number} pointer The pointer (Float) in Seconds.
-	 * @param {Boolean} [enforce] The enforce flag for direct playback
+	 * The optional parameter @enforce is a {Boolean} that enforces the stream
+	 * playback and avoids queueing or work delegation to a free clone.
 	 */
 	play: function(pointer, enforce) {
 
@@ -413,8 +428,10 @@ jukebox.Player.prototype = {
 	},
 
 	/*
-	 * This will stop the current playback and reset the pointer.
-	 * Automatically starts the backgroundMusic again for Single-Channel (iOS) mode.
+	 * This method will stop the current playback and resets the pointer that is
+	 * cached by {#pause} method calls.
+	 *
+	 * It automatically starts the backgroundMusic for single-stream environments.
 	 */
 	stop: function() {
 
@@ -428,10 +445,16 @@ jukebox.Player.prototype = {
 			this.context.pause();
 		}
 
+		return true;
+
 	},
 
 	/*
-	 * This will pause the current playback and cache the pointer position.
+	 * {Number} This method will pause the current playback and cache the current position
+	 * that is used by {#resume} on its next call.
+	 *
+	 * It returns the last position {Number} in seconds, so that you can optionally
+	 * use it in the {#resume} method call.
 	 */
 	pause: function() {
 
@@ -440,18 +463,36 @@ jukebox.Player.prototype = {
 		this.__lastPosition = this.getCurrentTime();
 		this.context.pause();
 
+		return this.__lastPosition;
+
 	},
 
 	/*
-	 * This will resume playback.
+	 * {Boolean} This method will resume playback. If the optional parameter @position
+	 * {Number} is not used, it will try to playback the last cached position from the
+	 * last {#pause} method call.
+	 *
+	 * If no @position and no cached position is available, it will start playback - no
+	 * matter where the stream is currently at.
+	 *
+	 * It returns {True} if a cached position was used. If no given and no cached
+	 * position was used for playback, it will return {False}
 	 */
-	resume: function() {
+	resume: function(position) {
 
-		if (this.__lastPosition !== null) {
-			this.play(this.__lastPosition);
+		position = typeof position === 'number' ? position : this.__lastPosition;
+
+		if (position !== null) {
+
+			this.play(position);
 			this.__lastPosition = null;
+			return true;
+
 		} else {
+
 			this.context.play();
+			return false;
+
 		}
 
 	},
@@ -464,33 +505,43 @@ jukebox.Player.prototype = {
 	HTML5API: {
 
 		/*
-		 * This will return the current volume
-		 * @returns {Number} volume (from 0 to 1.0)
+		 * {Number} This method will return the current volume as a {Number}
+		 * from 0 to 1.0.
 		 */
 		getVolume: function() {
 			return this.context.volume || 1;
 		},
 
 		/*
-		 * This will set the volume to a given value
-		 * @param {Number} value The float value (from 0 to 1.0)
+		 * This method will set the volume to a given @value that is a {Number}
+		 * from 0 to 1.0.
 		 */
 		setVolume: function(value) {
+
 			this.context.volume = value;
+
+			if (this.context.volume.toString().match(new RegExp(value / 100))) {
+				return true;
+			}
+
+			return false;
+
 		},
 
 		/*
-		 * This will return the current pointer position
-		 * @returns {Number} pointer position (currentTime)
+		 * {Number} This method will return the current pointer position in
+		 * the stream in seconds.
 		 */
 		getCurrentTime: function() {
 			return this.context.currentTime || 0;
 		},
 
 		/*
-		 * This will set the pointer position to a given value
-		 * @param {Number} pointer position (Float)
-		 * @returns {Boolean} Returns true if it was successfully set.
+		 * {Boolean} This method will set the current pointer position to a
+		 * new @value {Number} in seconds.
+		 *
+		 * It returns {True} on success, {False} if the stream wasn't ready
+		 * at the given stream position @value.
 		 */
 		setCurrentTime: function(value) {
 
@@ -514,8 +565,9 @@ jukebox.Player.prototype = {
 	FLASHAPI: {
 
 		/*
-		 * This will return the current volume
-		 * @returns {Number} volume (from 0 to 1.0)
+		 * {Number} This method will return the current volume of the stream as
+		 * a {Number} from 0 to 1.0, considering the Flash JavaScript API is
+		 * ready for access.
 		 */
 		getVolume: function() {
 
@@ -529,21 +581,28 @@ jukebox.Player.prototype = {
 		},
 
 		/*
-		 * This will set the volume to a given value
-		 * @param {Number} value The float value (from 0 to 1.0)
+		 * {Boolean} This method will set the volume to a given @value which is
+		 * a {Number} from 0 to 1.0. It will return {True} if the Flash
+		 * JavaScript API is ready for access. It returns {False} if the Flash
+		 * JavaScript API wasn't ready.
 		 */
 		setVolume: function(value) {
 
 			// Avoid stupid exceptions, wait for JavaScript API to be ready
 			if (this.context && typeof this.context.setVolume === 'function') {
 				this.context.setVolume(value);
+				return true;
 			}
+
+			return false;
 
 		},
 
 		/*
-		 * This will return the current pointer position
-		 * @returns {Number} pointer position (currentTime)
+		 * {Number} This method will return the pointer position in the stream in
+		 * seconds.
+		 *
+		 * If the Flash JavaScript API wasn't ready, the pointer position is 0.
 		 */
 		getCurrentTime: function() {
 
@@ -557,9 +616,11 @@ jukebox.Player.prototype = {
 		},
 
 		/*
-		 * This will set the pointer position to a given value
-		 * @param {Number} pointer position (Float)
-		 * @returns {Boolean} Returns true if it was successfully set.
+		 * {Boolean} This method will set the pointer position to a given @value {Number}
+		 * in seconds.
+		 *
+		 * It will return {True} if the Flash JavaScript API was ready. If not, it
+		 * will return {False}.
 		 */
 		setCurrentTime: function(value) {
 
