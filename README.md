@@ -16,7 +16,6 @@ Features
 * Sound-Spritemap Entries for easier playback
 * Multiple Jukeboxes for parallel playback
 
-Important: iOS devices are known to allow only one Jukebox to run, no parallel playback possible.
 
 
 **Jukebox Manager adds the following features:**
@@ -31,25 +30,33 @@ Important: iOS devices are known to allow only one Jukebox to run, no parallel p
 **Using Jukebox without Jukebox Manager:**
 
 It is not recommended to use Jukebox without the Jukebox Manager, but it's still possible.
-The Jukebox Manager offers Codec and Feature detection - to determine which kind of audio codecs will playback properly in your Environment.
-If you want to still use Jukebox without Jukebox Manager, you will have to set *resources* to an Array containing only one resource.
-
-
-Known Issues
-------------
-
-There's the problem with asynchronous playback, which can't be avoided on the JavaScript-side of the implementation.
-Delays were measured up to 820ms on initial playback. iOS has also a problem when falling into sleep mode, as iTunes will play back the sound
-file afterwards without stopping it.
-
-Additionally, iOS' security model prevents a website from playing sounds without prior user interaction. Thus, you will have to use a button
-or similar that will call player.play('background-birds') or similar.
+The Jukebox Manager offers Codec and Feature detection - to determine which kind of audio codecs will playback properly
+in your environment. If you want to still use Jukebox without Jukebox Manager, you will have to set *resources* to
+an Array containing only one resource.
 
 
 Documentation
 -------------
 
-There's a huge documentation with demos, examples and best practises.
-Take a look at it! It's located in the /doc folder.
+There's a huge [documentation of Jukebox](http://zynga.github.com/jukebox/) available at github pages.
+You are invited to read it, there are also many try-it-yourself demos.
 
+The documentation is also attached in the /doc folder if you clone the git repository.
+
+
+Known Issues (iOS)
+------------------
+
+iOS has a huge delay when using an encoded format for playback. That's because of their iTunes-using implementation.
+You can fix these delays using an AIFF container with IMA4 encoding. These are called *Core Audio Files* then.
+
+Also, the music spritemap will continue playback if the display is turned off and the JavaScript runtime was stopped.
+This is a known issue and is reported to the iOS developers. Additionally, iOS' security model prevents a website from
+playing sounds without prior user interaction.
+
+Further there is only the capability of playing back one sound in parallel on iOS.
+
+Please take a look at both the [iOS demo](http://zynga.github.com/jukebox/demo/ios.html) and the
+[iOS AIFF demo](http://zynga.github.com/jukebox/demo/ios-aiff.html) to see the difference in playback latencies and to
+find out how you can solve all these issues with sound on iOS.
 
