@@ -1,6 +1,6 @@
 
-Zynga's Jukebox
-==============
+Zynga's Jukebox (v1.0)
+======================
 
 The Jukebox is a component for playing sounds and music with the usage of sprites with a special
 focus on performance and cross-device deployment. It is known to run even on Android 1.6+ devices
@@ -33,6 +33,12 @@ It is not recommended to use Jukebox without the Jukebox Manager, but it's still
 The Jukebox Manager offers Codec and Feature detection - to determine which kind of audio codecs will playback properly
 in your environment. If you want to still use Jukebox without Jukebox Manager, you will have to set *resources* to
 an Array containing only one resource.
+
+
+Upcoming Features
+-----------------
+
+* Dynamic balancing of free clones at runtime
 
 
 Documentation
