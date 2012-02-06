@@ -84,7 +84,9 @@
 	<h2>iOS Integration Demo</h2>
 
 	<h3>Description</h3>
-	<b>iOS Security Model</b>
+
+	<p></p>
+	<b>Security Model</b>
 	<p>
 		iOS' security model doesn't allow you to play sounds without a precedent user interaction.
 		<br><br>
@@ -101,8 +103,15 @@
 		after other sound effects were played.
 	</p>
 
+	<b>Use AIFF Container / IMA4 Compression</b>
 	<p>
-		The demo is located at <a href="../demo/ios.html">demo/ios.html</a>
+		iOS' implementation is very, very slow when playing back encoded formats.
+		<br><br>
+		A hint is here to use the Core Audio File format, which is apparently only
+		an AIFF-container using IMA4 compression. Take a look at both demos to see the difference.
+	</p>
+	<p>
+		The demos are located at <a href="../demo/ios.html">demo/ios.html</a> and <a href="../demo/ios-aiff.html">demo/ios-aiff.html</a>.
 	</p>
 
 </article>
