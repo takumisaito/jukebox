@@ -520,7 +520,7 @@ jukebox.Player.prototype = {
 
 			this.context.volume = value;
 
-			// This is apparently only for iOS
+			// This is apparently only for mobile implementations
 			if (Math.abs(this.context.volume - value) < 0.0001) {
 				return true;
 			}
