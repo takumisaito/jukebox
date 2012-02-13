@@ -147,9 +147,8 @@ jukebox.Manager.prototype = {
 			this.features.channels = 8;
 
 			// Detect Volume support
-			audio.volume = 0.1;
-			this.features.volume = !!audio.volume.toString().match(/^0\.1/);
-
+			audio.volume = 0.1337;
+			this.features.volume = !!(Math.abs(audio.volume - 0.1337) < 0.0001);
 
 
 			// FIXME: HACK, but there's no way to detect these crappy implementations

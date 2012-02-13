@@ -520,12 +520,11 @@ jukebox.Player.prototype = {
 
 			this.context.volume = value;
 
-			// TODO: Needs to be verified if there's another method, RegExp is slow.
-			// WebKit mobile will result falsy if setting volume to 0.1 and checking
-			// against afterwards (volume will be dependend on accurancy, e.g. 0.10000000xy)
-			if (this.context.volume.toString().match(new RegExp(value * 100 / 100))) {
+			// This is apparently only for iOS
+			if (Math.abs(this.context.volume - value) < 0.0001) {
 				return true;
 			}
+
 
 			return false;
 
