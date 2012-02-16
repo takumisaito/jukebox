@@ -40,7 +40,7 @@ jukebox.Player = function(settings, origin) {
 
 
 	/**
-	 * @break {jukebox.Manager}
+	 * #break(jukebox.Manager)
 	 */
 
 	// Pseudo-Singleton to prevent double-initializaion
