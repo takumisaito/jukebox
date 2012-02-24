@@ -206,8 +206,8 @@ jukebox.Player.prototype = {
 
 			} else if (features.channels === 1 && settings.spritemap[settings.autoplay] !== undefined) {
 
-				this.__backgroundMusic = settings.spritemap[settings.autoplay];
-				this.__backgroundMusic.started = Date.now ? Date.now() : +new Date();
+				this.backgroundMusic = settings.spritemap[settings.autoplay];
+				this.backgroundMusic.started = Date.now ? Date.now() : +new Date();
 
 				// Initial playback will do the trick for iOS' security model
 				this.play(settings.autoplay);
@@ -339,23 +339,23 @@ jukebox.Player.prototype = {
 	 *
 	 * This allows us to trick out the iOS Security Model after initial playback =)
 	 */
-	__backgroundHackForiOS: function() {
+	backgroundHackForiOS: function() {
 
-		if (this.__backgroundMusic === undefined) {
+		if (this.backgroundMusic === undefined) {
 			return;
 		}
 
 		var now = Date.now ? Date.now() : +new Date();
 
-		if (this.__backgroundMusic.started === undefined) {
+		if (this.backgroundMusic.started === undefined) {
 
-			this.__backgroundMusic.started = now;
-			this.setCurrentTime(this.__backgroundMusic.start);
+			this.backgroundMusic.started = now;
+			this.setCurrentTime(this.backgroundMusic.start);
 
 		} else {
 
-			this.__backgroundMusic.__lastPointer = (( now - this.__backgroundMusic.started) / 1000) % (this.__backgroundMusic.end - this.__backgroundMusic.start) + this.__backgroundMusic.start;
-			this.play(this.__backgroundMusic.__lastPointer);
+			this.backgroundMusic.lastPointer = (( now - this.backgroundMusic.started) / 1000) % (this.backgroundMusic.end - this.backgroundMusic.start) + this.backgroundMusic.start;
+			this.play(this.backgroundMusic.lastPointer);
 
 		}
 
@@ -439,8 +439,8 @@ jukebox.Player.prototype = {
 		this.isPlaying = null;
 
 		// Was a Background Music played already?
-		if (this.__backgroundMusic) {
-			this.__backgroundHackForiOS();
+		if (this.backgroundMusic) {
+			this.backgroundHackForiOS();
 		} else {
 			this.context.pause();
 		}

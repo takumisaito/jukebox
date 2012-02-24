@@ -374,10 +374,10 @@ jukebox.Manager.prototype = {
 
 
 			// Background Music for Single-Mode (iOS)
-			} else if (player.__backgroundMusic !== undefined && player.isPlaying === null) {
+			} else if (player.backgroundMusic !== undefined && player.isPlaying === null) {
 
-				if (playerPosition > player.__backgroundMusic.end) {
-					player.__backgroundHackForiOS();
+				if (playerPosition > player.backgroundMusic.end) {
+					player.backgroundHackForiOS();
 				}
 
 			}
