@@ -154,8 +154,10 @@ jukebox.Manager.prototype = {
 			// FIXME: HACK, but there's no way to detect these crappy implementations
 			if (
 				// navigator.userAgent.match(/MSIE 9\.0/) ||
-				navigator.userAgent.match(/iPhone|iPod|iPad/i)) {
+				navigator.userAgent.match(/iPhone|iPod|iPad|IEMobile/i)) {
 				this.features.channels = 1;
+				// Resetting volume because Windows Phone uses single control for all Audio elements.
+				audio.volume = 1;
 			}
 
 		}
