@@ -214,6 +214,25 @@ jukebox.Player.prototype = {
 
 			}
 
+			// Pause audio on screen timeout because it can't be controlled then.
+			if (features.channels == 1 && settings.canPlayBackground !== true) {
+				// This does not work in iOS < 5.0 and Windows Phone.
+				// Calling audio.pause() after onbeforeunload event on Windows Phone may
+				// remove all audio from the browser until you restart the device.
+				window.addEventListener('pagehide', function() {
+					if (that.isPlaying !== null) {
+						that.pause();
+						that.__wasAutoPaused = true;
+					}
+				});
+				window.addEventListener('pageshow', function() {
+					if (that.__wasAutoPaused) {
+						that.resume();
+						delete that._wasAutoPaused;
+					}
+				});
+			}
+
 
 		// Flash Audio
 		} else if (features.flashaudio === true) {
