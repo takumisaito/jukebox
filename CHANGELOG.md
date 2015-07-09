@@ -10,7 +10,7 @@ Changelog
 * Jukebox is now jukebox.Player
 * jukebox.Manager is now a Singleton and able to be initialized manually with custom settings
 
-## 🐎 *Improvements*
+## :racehorse: *Improvements*
 
 * Sound latency using AIFF / IMA4 files on iOS results in about 90ms, was 820ms before (!!!)
 * Added game loop integration capabilities to jukebox.Manager
